@@ -10,7 +10,8 @@
   <meta name="apple-mobile-web-app-title" content="Mon agenda" />
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" type="image/svg+xml" href="./icon.svg" />
-  <link rel="apple-touch-icon" href="./icon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
   <!-- Firebase SDK (Auth + Firestore) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -284,8 +285,8 @@
       --text: #442336;
       --text-muted: #6B3F58;
 
-      --accent: #EB4899;
-      --accent-hover: #DB2777;
+      --accent: #D12D84;
+      --accent-hover: #B81F6E;
       --accent-soft: #FDE7F3;
       --accent-soft-text: #9D174D;
       --accent-text: #FFFFFF;
@@ -512,8 +513,7 @@
     /* Rendu monochrome harmonieux pour Film en noir et blanc */
     [data-theme="noir-et-blanc"] .app-shell,
     [data-theme="noir-et-blanc"] .modal-backdrop,
-    [data-theme="noir-et-blanc"] .toast-container,
-    [data-theme="noir-et-blanc"] .pin-lock-screen {
+    [data-theme="noir-et-blanc"] .toast-container {
       filter: grayscale(100%);
     }
 
@@ -1815,170 +1815,8 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
     }
 
-    /* =========================================================
-       11b. SYSTÈME DE CODE PIN & VERROUILLAGE (v31)
-       ========================================================= */
-    body.is-locked .app-shell {
-      display: none !important;
-    }
-
-    .pin-lock-screen {
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.2rem;
-      overflow-y: auto;
-    }
-
-    .pin-card {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-card);
-      box-shadow: var(--shadow-card);
-      width: 100%;
-      max-width: 360px;
-      padding: 1.6rem 1.4rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 1rem;
-    }
-
-    .pin-lock-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background: var(--accent-soft);
-      border: 1.5px solid var(--accent);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.55rem;
-    }
-
-    .pin-lock-title {
-      font-family: "Quicksand", sans-serif;
-      font-size: 1.45rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .pin-dots {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.9rem;
-      padding: 0.35rem 0;
-    }
-
-    .pin-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      border: 2px solid var(--border);
-      background: transparent;
-      transition: background-color 0.14s ease, border-color 0.14s ease, transform 0.12s ease;
-    }
-
-    .pin-dot.filled {
-      background: var(--accent);
-      border-color: var(--accent);
-      transform: scale(1.1);
-    }
-
-    .pin-dots.shake {
-      animation: pinShake 0.34s ease;
-    }
-
-    @keyframes pinShake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-8px); }
-      40% { transform: translateX(8px); }
-      60% { transform: translateX(-6px); }
-      80% { transform: translateX(6px); }
-    }
-
-    .pin-error-msg {
-      min-height: 1.25rem;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--danger);
-    }
-
-    .pin-keypad {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.65rem;
-      width: 100%;
-      max-width: 260px;
-    }
-
-    .pin-key {
-      height: 54px;
-      border-radius: 14px;
-      border: 1.5px solid var(--border-subtle);
-      background: var(--surface-soft);
-      color: var(--text);
-      font-family: "Quicksand", sans-serif;
-      font-size: 1.3rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .pin-key:hover {
-      background: var(--surface-muted);
-      border-color: var(--accent);
-    }
-
-    .pin-key.pin-key-action {
-      font-family: "Nunito", sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    .pin-recovery-box {
-      width: 100%;
-      text-align: left;
-      background: var(--surface-soft);
-      border: 1px solid var(--border-subtle);
-      border-radius: 13px;
-      padding: 0.9rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-    }
-
-    .pin-status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.16rem 0.62rem;
-      border-radius: var(--radius-pill);
-      font-size: 0.78rem;
-      font-weight: 700;
-      border: 1px solid var(--border-subtle);
-      background: var(--surface-soft);
-      color: var(--text-muted);
-    }
-
-    .pin-status-badge.active {
-      background: var(--accent-soft);
-      border-color: var(--accent);
-      color: var(--accent-soft-text);
-    }
-
-    .pin-divider {
+    /* Séparateur discret */
+    .soft-divider {
       border: none;
       border-top: 1px dashed var(--border-subtle);
       margin: 0.2rem 0;
@@ -2358,58 +2196,19 @@
       cursor: crosshair;
     }
 
+
+    /* Respect de la préférence « réduire les animations » du système */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- ÉCRAN DE VERROUILLAGE PAR CODE PIN (v31) -->
-  <div id="pinLockScreen" class="pin-lock-screen hidden" role="dialog" aria-modal="true" aria-labelledby="pinLockTitle">
-    <div class="pin-card">
-      <div class="pin-lock-icon" aria-hidden="true">🔒</div>
-      <div>
-        <h2 id="pinLockTitle" class="pin-lock-title">Mon agenda</h2>
-        <p id="pinLockSubtitle" class="muted">Entre ton code PIN à 4 chiffres</p>
-      </div>
-
-      <div id="pinDots" class="pin-dots" aria-label="Saisie du code PIN">
-        <span class="pin-dot"></span>
-        <span class="pin-dot"></span>
-        <span class="pin-dot"></span>
-        <span class="pin-dot"></span>
-      </div>
-
-      <div id="pinErrorMsg" class="pin-error-msg" aria-live="polite"></div>
-
-      <div id="pinKeypad" class="pin-keypad">
-        <button type="button" class="pin-key" data-digit="1">1</button>
-        <button type="button" class="pin-key" data-digit="2">2</button>
-        <button type="button" class="pin-key" data-digit="3">3</button>
-        <button type="button" class="pin-key" data-digit="4">4</button>
-        <button type="button" class="pin-key" data-digit="5">5</button>
-        <button type="button" class="pin-key" data-digit="6">6</button>
-        <button type="button" class="pin-key" data-digit="7">7</button>
-        <button type="button" class="pin-key" data-digit="8">8</button>
-        <button type="button" class="pin-key" data-digit="9">9</button>
-        <button type="button" class="pin-key pin-key-action" id="pinClearBtn">Effacer</button>
-        <button type="button" class="pin-key" data-digit="0">0</button>
-        <button type="button" class="pin-key pin-key-action" id="pinBackBtn" aria-label="Supprimer le dernier chiffre">⌫</button>
-      </div>
-
-      <button type="button" id="toggleRecoveryBtn" class="ghost sm">Code oublié ?</button>
-
-      <div id="pinRecoveryBox" class="pin-recovery-box hidden">
-        <span class="sub-label">Option de secours</span>
-        <p id="pinRecoveryQuestionDisplay" class="muted" style="color: var(--text); font-weight: 600;"></p>
-        <form id="pinRecoveryForm" class="stack">
-          <input id="pinRecoveryAnswerInput" type="text" placeholder="Ta réponse secrète..." autocomplete="off" required />
-          <div class="row" style="justify-content: flex-end;">
-            <button type="button" id="cancelRecoveryBtn" class="sm">Retour</button>
-            <button type="submit" class="primary sm">Déverrouiller</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <div class="app-shell">
     <!-- CARTE 1 : EN-TÊTE CENTRÉ -->
     <header class="top-card">
@@ -2419,7 +2218,6 @@
         <button id="navCloudBtn" class="nav-icon-btn" type="button" title="Compte & Synchro Cloud" aria-label="Compte et Synchro Cloud">☁️</button>
         <button id="navSettingsBtn" class="nav-icon-btn" type="button" title="Paramètres" aria-label="Paramètres">⚙️</button>
         <button id="navFaqBtn" class="nav-icon-btn" type="button" title="Aide & FAQ" aria-label="Aide et FAQ">❓</button>
-        <button id="navLockBtn" class="nav-icon-btn hidden" type="button" title="Verrouiller l'agenda" aria-label="Verrouiller l'agenda">🔒</button>
       </nav>
       <div class="row" style="justify-content:center;">
         <button id="cloudStatusPill" type="button" class="cloud-status-pill" title="Gérer mon compte cloud">☁️ Hors ligne (local)</button>
@@ -2795,7 +2593,7 @@
               </span>
             </button>
           </div>
-          <hr class="pin-divider" />
+          <hr class="soft-divider" />
           <div class="sub-block">
             <label class="sub-label" for="defaultViewSelect">Vue à l'ouverture de l'agenda</label>
             <select id="defaultViewSelect">
@@ -2822,90 +2620,6 @@
           </div>
           <div>
             <button id="openFaqFromBackupBtn" class="ghost sm" type="button" style="padding-left: 0.25rem;">❓ Comment exporter mon fichier .ics depuis Google Agenda ?</button>
-          </div>
-        </article>
-
-        <!-- Sécurité & Code PIN (v31) -->
-        <article class="card">
-          <div class="card-header">
-            <h2 class="card-title">🔒 Sécurité &amp; Code PIN</h2>
-            <span id="pinStatusBadge" class="pin-status-badge">🔓 Désactivé</span>
-          </div>
-          <p class="muted">Protège ton agenda au démarrage avec un code à 4 chiffres et une question de secours.</p>
-
-          <!-- Formulaire d'activation (quand le PIN est désactivé) -->
-          <form id="pinSetupForm" class="stack">
-            <div class="row">
-              <div style="flex: 1;">
-                <label class="sub-label" for="setupPinInput">Nouveau PIN (4 chiffres)</label>
-                <input id="setupPinInput" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" autocomplete="new-password" required />
-              </div>
-              <div style="flex: 1;">
-                <label class="sub-label" for="setupPinConfirmInput">Confirmer le PIN</label>
-                <input id="setupPinConfirmInput" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" autocomplete="new-password" required />
-              </div>
-            </div>
-            <div>
-              <label class="sub-label" for="setupRecoveryQuestionInput">Question de secours</label>
-              <input id="setupRecoveryQuestionInput" type="text" placeholder="Ex. Nom de mon premier animal ?" required />
-            </div>
-            <div>
-              <label class="sub-label" for="setupRecoveryAnswerInput">Réponse de secours</label>
-              <input id="setupRecoveryAnswerInput" type="text" placeholder="Ta réponse secrète..." autocomplete="off" required />
-            </div>
-            <div class="row" style="justify-content: flex-end;">
-              <button type="submit" class="primary sm">Activer le code PIN</button>
-            </div>
-          </form>
-
-          <!-- Gestion (quand le PIN est actif) -->
-          <div id="pinManageBox" class="stack hidden">
-            <div class="row">
-              <button id="settingsQuickLockBtn" type="button" class="btn-soft sm">🔒 Verrouiller maintenant</button>
-              <button id="togglePinChangeBtn" type="button" class="sm">Modifier le PIN</button>
-              <button id="togglePinDisableBtn" type="button" class="sm danger-outline">Désactiver</button>
-            </div>
-
-            <form id="pinChangeForm" class="stack hidden" style="margin-top: 0.35rem;">
-              <hr class="pin-divider" />
-              <div>
-                <label class="sub-label" for="changeCurrentPinInput">PIN actuel</label>
-                <input id="changeCurrentPinInput" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required />
-              </div>
-              <div class="row">
-                <div style="flex: 1;">
-                  <label class="sub-label" for="changeNewPinInput">Nouveau PIN</label>
-                  <input id="changeNewPinInput" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required />
-                </div>
-                <div style="flex: 1;">
-                  <label class="sub-label" for="changeConfirmPinInput">Confirmer</label>
-                  <input id="changeConfirmPinInput" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required />
-                </div>
-              </div>
-              <div>
-                <label class="sub-label" for="changeRecoveryQuestionInput">Question de secours</label>
-                <input id="changeRecoveryQuestionInput" type="text" required />
-              </div>
-              <div>
-                <label class="sub-label" for="changeRecoveryAnswerInput">Nouvelle réponse (laisser vide pour conserver l'actuelle)</label>
-                <input id="changeRecoveryAnswerInput" type="text" placeholder="Optionnel..." autocomplete="off" />
-              </div>
-              <div class="row" style="justify-content: flex-end;">
-                <button type="button" id="cancelPinChangeBtn" class="sm">Annuler</button>
-                <button type="submit" class="primary sm">Enregistrer</button>
-              </div>
-            </form>
-
-            <form id="pinDisableForm" class="stack hidden" style="margin-top: 0.35rem;">
-              <hr class="pin-divider" />
-              <div>
-                <label class="sub-label" for="disableCurrentPinInput">Entre ton PIN actuel pour désactiver le verrouillage</label>
-                <div class="inline-form">
-                  <input id="disableCurrentPinInput" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required />
-                  <button type="submit" class="danger-outline sm">Confirmer</button>
-                </div>
-              </div>
-            </form>
           </div>
         </article>
 
@@ -3055,6 +2769,19 @@
     </div>
   </div>
 
+  <!-- MODALE CONFLIT SYNCHRO CLOUD -->
+  <div id="cloudConflictModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="cloudConflictTitle" style="z-index: 1100;">
+    <div class="modal-box" style="max-width: 430px;">
+      <h3 id="cloudConflictTitle" class="card-title">☁️ Deux versions de ton agenda</h3>
+      <p class="muted">Les données de cet appareil sont différentes de celles de ton compte cloud. Laquelle veux-tu garder ? L'autre sera remplacée, mais une sauvegarde JSON de ce qui est remplacé sera d'abord téléchargée.</p>
+      <div class="stack">
+        <button id="cloudKeepCloudBtn" class="primary" type="button">☁️ Utiliser les données du cloud</button>
+        <button id="cloudKeepLocalBtn" type="button">📱 Garder les données de cet appareil</button>
+        <button id="cloudLaterBtn" class="ghost sm" type="button">Décider plus tard (rien n'est modifié)</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODALE SUPPRESSION ÉVÉNEMENT RÉCURRENT (v34) -->
   <div id="deleteRecurringModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="deleteRecurringTitle" style="z-index: 1050;">
     <div class="modal-box" style="max-width: 430px;">
@@ -3100,18 +2827,6 @@
               <li><strong>Avec compte Cloud (☁️ Google ou courriel) :</strong> ton agenda (horaire, tâches, routines, suivi bien-être, notes et dessins) est synchronisé dans ton espace privé <strong>Firebase Firestore</strong> afin de te suivre sur tous tes appareils, tout en gardant une copie locale pour le mode hors ligne.</li>
             </ul>
             <p>Sur iPad/Safari, le navigateur peut parfois vider le stockage local d'un site peu utilisé : pense à te connecter au cloud ou à faire un <strong>⬇️ Exporter JSON</strong> régulièrement.</p>
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary>🔒 Comment fonctionne le code PIN et quelle sécurité offre-t-il ?</summary>
-          <div class="faq-answer">
-            <p>Dans <strong>⚙️ Paramètres</strong> &gt; <strong>Sécurité &amp; Code PIN</strong>, tu peux activer un code à 4 chiffres et une question de secours. Ton PIN et ta réponse secrète sont <strong>hachés en SHA-256</strong> (jamais enregistrés en clair).</p>
-            <p><strong>Transparence :</strong> ce verrouillage protège efficacement ton écran contre un regard indiscret sur ton appareil, mais comme il fonctionne côté navigateur, il ne remplace pas un chiffrement médical si quelqu'un inspecte directement les outils de développement de ton navigateur.</p>
-            <ul>
-              <li>Une fois activé, un bouton <strong>🔒</strong> apparaît en haut pour verrouiller l'agenda en un clic.</li>
-              <li>En cas d'oubli, touche <strong>« Code oublié ? »</strong> et entre ta réponse secrète pour réinitialiser le PIN sans perdre tes données.</li>
-            </ul>
           </div>
         </details>
 
@@ -3302,83 +3017,6 @@
         return Math.min(max, Math.max(min, Math.round(n)));
       }
 
-      /* Hachage SHA-256 pur JS (fonctionne 100 % hors ligne, même en file://) */
-      function sha256Hex(ascii) {
-        function rightRotate(value, amount) {
-          return (value >>> amount) | (value << (32 - amount));
-        }
-        const mathPow = Math.pow;
-        const maxWord = mathPow(2, 32);
-        const lengthProperty = "length";
-        let i, j;
-        let result = "";
-        const words = [];
-        const asciiBitLength = ascii[lengthProperty] * 8;
-        const hash = sha256Hex.h = sha256Hex.h || [];
-        const k = sha256Hex.k = sha256Hex.k || [];
-        let primeCounter = k[lengthProperty];
-        const isComposite = {};
-        for (let candidate = 2; primeCounter < 64; candidate++) {
-          if (!isComposite[candidate]) {
-            for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
-            hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
-            k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
-          }
-        }
-        const utf8 = unescape(encodeURIComponent(ascii));
-        const bitLen = utf8.length * 8;
-        let padded = utf8 + "\x80";
-        while ((padded.length % 64) - 56) padded += "\x00";
-        for (i = 0; i < padded.length; i++) {
-          j = padded.charCodeAt(i);
-          words[i >> 2] |= j << (((3 - i) % 4) * 8);
-        }
-        words[words.length] = (bitLen / maxWord) | 0;
-        words[words.length] = bitLen;
-        const h = hash.slice(0, 8);
-        for (j = 0; j < words.length; ) {
-          const w = words.slice(j, (j += 16));
-          const oldHash = h.slice(0);
-          for (i = 0; i < 64; i++) {
-            const w15 = w[i - 15], w2 = w[i - 2];
-            const a = h[0], e = h[4];
-            const temp1 =
-              h[7] +
-              (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) +
-              ((e & h[5]) ^ (~e & h[6])) +
-              k[i] +
-              (w[i] = i < 16 ? w[i] : (
-                w[i - 16] +
-                (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) +
-                w[i - 7] +
-                (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))
-              ) | 0);
-            const temp2 =
-              (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) +
-              ((a & h[1]) ^ (a & h[2]) ^ (h[1] & h[2]));
-            h.unshift((temp1 + temp2) | 0);
-            h[4] = (h[4] + temp1) | 0;
-            h.pop();
-          }
-          for (i = 0; i < 8; i++) h[i] = (h[i] + oldHash[i]) | 0;
-        }
-        for (i = 0; i < 8; i++) {
-          for (j = 3; j + 1; j--) {
-            const b = (h[i] >> (j * 8)) & 255;
-            result += (b < 16 ? "0" : "") + b.toString(16);
-          }
-        }
-        return result;
-      }
-
-      function hashPin(pin) {
-        return sha256Hex("ziigi_agenda_pin_v31:" + String(pin || "").trim());
-      }
-
-      function hashRecoveryAnswer(ans) {
-        return sha256Hex("ziigi_agenda_rec_v31:" + String(ans || "").trim().toLowerCase());
-      }
-
       /* =========================================================
          2. DONNÉES PAR DÉFAUT, MIGRATION DOUCE & PERSISTANCE
          ========================================================= */
@@ -3487,13 +3125,7 @@
           defaultView: "day",
           gentleMode: false,
           collapsedCards: {},
-          lastExportAt: null,
-          pinConfig: {
-            enabled: false,
-            hash: "",
-            recoveryQuestion: "",
-            recoveryAnswerHash: ""
-          }
+          lastExportAt: null
         };
       }
 
@@ -3591,6 +3223,87 @@
         return s;
       }
 
+      /* ---- Assainissement des données (import JSON, cloud, localStorage) ---- */
+      function safeStr(v, max) {
+        return typeof v === "string" ? v.slice(0, max || 2000) : "";
+      }
+      function safeColor(c, fallback) {
+        const t = typeof c === "string" ? c.trim() : "";
+        return /^(#[0-9a-fA-F]{3,8}|var\(--[a-zA-Z0-9-]+\))$/.test(t) ? t : fallback;
+      }
+      function sanitizeLevelPills(arr, defaults) {
+        if (!Array.isArray(arr)) return defaults;
+        return arr.filter(function (x) { return isObj(x) && typeof x.id === "string" && x.id; }).map(function (x) {
+          return { id: safeStr(x.id, 80), emoji: safeStr(x.emoji, 16), label: safeStr(x.label, 80), level: clampLevel(x.level) };
+        });
+      }
+      function sanitizeSnapshot(x) {
+        if (!isObj(x)) return null;
+        return { id: safeStr(x.id, 80), emoji: safeStr(x.emoji, 16), label: safeStr(x.label, 80), level: clampLevel(x.level) };
+      }
+      function sanitizeCategories(arr, defaults) {
+        if (!Array.isArray(arr)) return defaults;
+        const out = arr.filter(function (x) { return isObj(x) && typeof x.id === "string" && x.id; }).map(function (x) {
+          return { id: safeStr(x.id, 80), name: safeStr(x.name, 60) || "Catégorie", color: safeColor(x.color, "#2563EB") };
+        });
+        return out.length > 0 ? out : defaults;
+      }
+      function sanitizeTextItems(arr, defaults, textKey) {
+        if (!Array.isArray(arr)) return defaults;
+        return arr.filter(function (x) { return isObj(x) && typeof x.id === "string" && x.id; }).map(function (x) {
+          const o = { id: safeStr(x.id, 80) };
+          o[textKey] = safeStr(x[textKey], 1000);
+          return o;
+        });
+      }
+      function sanitizeTasksMap(map) {
+        const out = {};
+        if (!isObj(map)) return out;
+        Object.keys(map).forEach(function (d) {
+          if (!Array.isArray(map[d])) return;
+          out[d] = map[d].filter(function (t) { return isObj(t) && typeof t.id === "string" && t.id; }).map(function (t) {
+            return { id: safeStr(t.id, 80), text: safeStr(t.text, 1000), done: Boolean(t.done) };
+          });
+        });
+        return out;
+      }
+      function sanitizeQuotes(arr, defaults) {
+        if (!Array.isArray(arr)) return defaults;
+        const out = arr.filter(function (q) { return typeof q === "string" && q.trim(); }).map(function (q) { return q.slice(0, 500); });
+        return out.length > 0 ? out : defaults;
+      }
+      function sanitizeStringMap(map, max) {
+        const out = {};
+        if (!isObj(map)) return out;
+        Object.keys(map).forEach(function (d) { if (typeof map[d] === "string") out[d] = map[d].slice(0, max || 20000); });
+        return out;
+      }
+      function sanitizeDrawings(map) {
+        const out = {};
+        if (!isObj(map)) return out;
+        Object.keys(map).forEach(function (d) {
+          const v = map[d];
+          if (typeof v === "string" && /^data:image\/(png|webp|jpeg);base64,[A-Za-z0-9+/=]+$/.test(v) && v.length < 2500000) out[d] = v;
+        });
+        return out;
+      }
+      function sanitizeChecksMap(map) {
+        const out = {};
+        if (!isObj(map)) return out;
+        Object.keys(map).forEach(function (d) {
+          if (!isObj(map[d])) return;
+          out[d] = {};
+          Object.keys(map[d]).forEach(function (k) { if (map[d][k]) out[d][k] = true; });
+        });
+        return out;
+      }
+      function sanitizeBoolMap(map) {
+        const out = {};
+        if (!isObj(map)) return out;
+        Object.keys(map).forEach(function (k) { out[k] = Boolean(map[k]); });
+        return out;
+      }
+
       function normalizeWellnessMap(rawMap) {
         const result = {};
         if (!isObj(rawMap)) return result;
@@ -3599,14 +3312,14 @@
           const entry = rawMap[dateKey];
           if (!isObj(entry)) return;
           result[dateKey] = {
-            moodId: entry.moodId || null,
-            moodSnapshot: isObj(entry.moodSnapshot) ? entry.moodSnapshot : null,
-            sleepId: entry.sleepId || null,
-            sleepSnapshot: isObj(entry.sleepSnapshot) ? entry.sleepSnapshot : null,
+            moodId: typeof entry.moodId === "string" && entry.moodId ? entry.moodId.slice(0, 80) : null,
+            moodSnapshot: sanitizeSnapshot(entry.moodSnapshot),
+            sleepId: typeof entry.sleepId === "string" && entry.sleepId ? entry.sleepId.slice(0, 80) : null,
+            sleepSnapshot: sanitizeSnapshot(entry.sleepSnapshot),
             mealsCount: clampRange(entry.mealsCount || 0, 0, 3),
             snack: Boolean(entry.snack),
             waterGlasses: clampRange(entry.waterGlasses || 0, 0, 8),
-            careIds: Array.isArray(entry.careIds) ? entry.careIds : [],
+            careIds: Array.isArray(entry.careIds) ? entry.careIds.filter(function (c) { return typeof c === "string"; }).map(function (c) { return c.slice(0, 80); }) : [],
             isDemo: Boolean(entry.isDemo)
           };
         });
@@ -3620,13 +3333,13 @@
         const mappedTheme = THEME_MIGRATION[raw.theme] || def.theme;
 
         return {
-          ownerName: typeof raw.ownerName === "string" ? raw.ownerName : "",
+          ownerName: safeStr(raw.ownerName, 60),
           theme: VALID_THEMES.includes(mappedTheme) ? mappedTheme : def.theme,
-          quotes: Array.isArray(raw.quotes) && raw.quotes.length > 0 ? raw.quotes : def.quotes,
-          categories: Array.isArray(raw.categories) && raw.categories.length > 0 ? raw.categories : def.categories,
-          moodPills: Array.isArray(raw.moodPills) ? raw.moodPills : def.moodPills,
-          sleepPills: Array.isArray(raw.sleepPills) ? raw.sleepPills : def.sleepPills,
-          careGestures: Array.isArray(raw.careGestures) ? raw.careGestures : def.careGestures,
+          quotes: sanitizeQuotes(raw.quotes, def.quotes),
+          categories: sanitizeCategories(raw.categories, def.categories),
+          moodPills: sanitizeLevelPills(raw.moodPills, def.moodPills),
+          sleepPills: sanitizeLevelPills(raw.sleepPills, def.sleepPills),
+          careGestures: sanitizeTextItems(raw.careGestures, def.careGestures, "label"),
           moments: Array.isArray(raw.moments)
             ? raw.moments
                 .filter(function (m) { return isObj(m) && typeof m.date === "string"; })
@@ -3645,25 +3358,17 @@
                   };
                 })
             : [],
-          tasksByDate: isObj(raw.tasksByDate) ? raw.tasksByDate : {},
-          dumpItems: Array.isArray(raw.dumpItems) ? raw.dumpItems : [],
-          routines: Array.isArray(raw.routines) ? raw.routines : def.routines,
-          routineChecksByDate: isObj(raw.routineChecksByDate) ? raw.routineChecksByDate : {},
+          tasksByDate: sanitizeTasksMap(raw.tasksByDate),
+          dumpItems: sanitizeTextItems(raw.dumpItems, [], "text"),
+          routines: sanitizeTextItems(raw.routines, def.routines, "text"),
+          routineChecksByDate: sanitizeChecksMap(raw.routineChecksByDate),
           wellnessByDate: normalizeWellnessMap(raw.wellnessByDate),
-          notesByDate: isObj(raw.notesByDate) ? raw.notesByDate : {},
-          drawingsByDate: isObj(raw.drawingsByDate) ? raw.drawingsByDate : {},
+          notesByDate: sanitizeStringMap(raw.notesByDate),
+          drawingsByDate: sanitizeDrawings(raw.drawingsByDate),
           defaultView: raw.defaultView === "month" ? "month" : "day",
           gentleMode: Boolean(raw.gentleMode),
-          collapsedCards: isObj(raw.collapsedCards) ? raw.collapsedCards : {},
-          lastExportAt: typeof raw.lastExportAt === "number" ? raw.lastExportAt : null,
-          pinConfig: isObj(raw.pinConfig)
-            ? {
-                enabled: Boolean(raw.pinConfig.enabled && raw.pinConfig.hash),
-                hash: typeof raw.pinConfig.hash === "string" ? raw.pinConfig.hash : "",
-                recoveryQuestion: typeof raw.pinConfig.recoveryQuestion === "string" ? raw.pinConfig.recoveryQuestion : "",
-                recoveryAnswerHash: typeof raw.pinConfig.recoveryAnswerHash === "string" ? raw.pinConfig.recoveryAnswerHash : ""
-              }
-            : def.pinConfig
+          collapsedCards: sanitizeBoolMap(raw.collapsedCards),
+          lastExportAt: typeof raw.lastExportAt === "number" ? raw.lastExportAt : null
         };
       }
 
@@ -3689,7 +3394,11 @@
       let resizeTimer = null;
 
       let scheduleCloudSave = function () {};
+      const CLOUD_DIRTY_KEY = "ziigi_agenda_cloud_dirty";
       function saveState() {
+        try {
+          localStorage.setItem(CLOUD_DIRTY_KEY, String(Date.now()));
+        } catch (err) {}
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         } catch (err) {
@@ -3784,8 +3493,6 @@
         const clean = (state.ownerName || "").trim();
         const title = clean ? `Agenda de ${clean}` : "Mon agenda";
         document.getElementById("appTitleDisplay").textContent = title;
-        const lockTitle = document.getElementById("pinLockTitle");
-        if (lockTitle) lockTitle.textContent = title;
         document.title = title;
       }
 
@@ -4923,33 +4630,12 @@
       /* =========================================================
          12. PAGE PARAMÈTRES
          ========================================================= */
-      function renderPinSettings() {
-        const enabled = Boolean(state.pinConfig && state.pinConfig.enabled && state.pinConfig.hash);
-        const badge = document.getElementById("pinStatusBadge");
-        const setupForm = document.getElementById("pinSetupForm");
-        const manageBox = document.getElementById("pinManageBox");
-        const navLockBtn = document.getElementById("navLockBtn");
-
-        badge.textContent = enabled ? "🔒 Actif" : "🔓 Désactivé";
-        badge.classList.toggle("active", enabled);
-        setupForm.classList.toggle("hidden", enabled);
-        manageBox.classList.toggle("hidden", !enabled);
-        navLockBtn.classList.toggle("hidden", !enabled);
-
-        if (enabled) {
-          document.getElementById("changeRecoveryQuestionInput").value = state.pinConfig.recoveryQuestion || "";
-          document.getElementById("pinChangeForm").classList.add("hidden");
-          document.getElementById("pinDisableForm").classList.add("hidden");
-        }
-      }
-
       function renderSettings() {
         applyTheme();
         document.getElementById("ownerNameInput").value = state.ownerName || "";
         const dvSel = document.getElementById("defaultViewSelect");
         if (dvSel) dvSel.value = state.defaultView === "month" ? "month" : "day";
         if (typeof updateBackupReminder === "function") updateBackupReminder();
-        renderPinSettings();
 
         const moodsList = document.getElementById("settingsMoodsList");
         moodsList.innerHTML = "";
@@ -5075,8 +4761,6 @@
 
         document.getElementById("navAgendaBtn").classList.toggle("active", currentPage === "agenda");
         document.getElementById("navSettingsBtn").classList.toggle("active", currentPage === "settings");
-        const pinEnabled = Boolean(state.pinConfig && state.pinConfig.enabled && state.pinConfig.hash);
-        document.getElementById("navLockBtn").classList.toggle("hidden", !pinEnabled);
         document.getElementById("agendaPage").classList.toggle("hidden", currentPage !== "agenda");
         document.getElementById("settingsPage").classList.toggle("hidden", currentPage !== "settings");
 
@@ -5542,262 +5226,6 @@
       });
 
       /* =========================================================
-         14. SYSTÈME DE CODE PIN, VERROUILLAGE RAPIDE & SECOURS (v31)
-         ========================================================= */
-      let isLocked = false;
-      let pinBuffer = "";
-
-      function updatePinDots() {
-        const dots = document.querySelectorAll("#pinDots .pin-dot");
-        dots.forEach(function (dot, idx) {
-          dot.classList.toggle("filled", idx < pinBuffer.length);
-        });
-      }
-
-      function setPinError(msg) {
-        const el = document.getElementById("pinErrorMsg");
-        el.textContent = msg || "";
-      }
-
-      function lockApp() {
-        if (!state.pinConfig || !state.pinConfig.enabled || !state.pinConfig.hash) return;
-        isLocked = true;
-        pinBuffer = "";
-        updatePinDots();
-        setPinError("");
-        document.getElementById("pinRecoveryBox").classList.add("hidden");
-        document.getElementById("pinKeypad").classList.remove("hidden");
-        document.getElementById("toggleRecoveryBtn").classList.remove("hidden");
-        document.getElementById("pinRecoveryAnswerInput").value = "";
-        document.body.classList.add("is-locked");
-        document.getElementById("pinLockScreen").classList.remove("hidden");
-      }
-
-      function unlockApp() {
-        isLocked = false;
-        pinBuffer = "";
-        updatePinDots();
-        setPinError("");
-        document.body.classList.remove("is-locked");
-        document.getElementById("pinLockScreen").classList.add("hidden");
-      }
-
-      function handlePinDigit(digit) {
-        if (!isLocked || pinBuffer.length >= 4) return;
-        setPinError("");
-        pinBuffer += digit;
-        updatePinDots();
-
-        if (pinBuffer.length === 4) {
-          if (hashPin(pinBuffer) === state.pinConfig.hash) {
-            setTimeout(function () {
-              unlockApp();
-              renderAll();
-            }, 120);
-          } else {
-            const dotsEl = document.getElementById("pinDots");
-            dotsEl.classList.remove("shake");
-            void dotsEl.offsetWidth;
-            dotsEl.classList.add("shake");
-            setPinError("Code PIN incorrect. Réessaie.");
-            setTimeout(function () {
-              pinBuffer = "";
-              updatePinDots();
-            }, 340);
-          }
-        }
-      }
-
-      document.querySelectorAll("#pinKeypad .pin-key[data-digit]").forEach(function (btn) {
-        btn.onclick = function () {
-          handlePinDigit(btn.dataset.digit);
-        };
-      });
-
-      document.getElementById("pinClearBtn").onclick = function () {
-        pinBuffer = "";
-        updatePinDots();
-        setPinError("");
-      };
-
-      document.getElementById("pinBackBtn").onclick = function () {
-        pinBuffer = pinBuffer.slice(0, -1);
-        updatePinDots();
-        setPinError("");
-      };
-
-      document.addEventListener("keydown", function (e) {
-        if (!isLocked) return;
-        const recoveryVisible = !document.getElementById("pinRecoveryBox").classList.contains("hidden");
-        if (recoveryVisible) return;
-        if (/^[0-9]$/.test(e.key)) {
-          e.preventDefault();
-          handlePinDigit(e.key);
-        } else if (e.key === "Backspace") {
-          e.preventDefault();
-          pinBuffer = pinBuffer.slice(0, -1);
-          updatePinDots();
-          setPinError("");
-        } else if (e.key === "Escape") {
-          pinBuffer = "";
-          updatePinDots();
-          setPinError("");
-        }
-      });
-
-      // Option de secours sur l'écran de verrouillage
-      document.getElementById("toggleRecoveryBtn").onclick = function () {
-        const q = (state.pinConfig && state.pinConfig.recoveryQuestion) || "";
-        if (!q || !state.pinConfig.recoveryAnswerHash) {
-          setPinError("Aucune question de secours n'a été configurée.");
-          return;
-        }
-        document.getElementById("pinRecoveryQuestionDisplay").textContent = q;
-        document.getElementById("pinRecoveryBox").classList.remove("hidden");
-        document.getElementById("pinKeypad").classList.add("hidden");
-        document.getElementById("toggleRecoveryBtn").classList.add("hidden");
-        setPinError("");
-        document.getElementById("pinRecoveryAnswerInput").focus();
-      };
-
-      document.getElementById("cancelRecoveryBtn").onclick = function () {
-        document.getElementById("pinRecoveryBox").classList.add("hidden");
-        document.getElementById("pinKeypad").classList.remove("hidden");
-        document.getElementById("toggleRecoveryBtn").classList.remove("hidden");
-        setPinError("");
-      };
-
-      document.getElementById("pinRecoveryForm").onsubmit = function (e) {
-        e.preventDefault();
-        const ans = document.getElementById("pinRecoveryAnswerInput").value;
-        if (hashRecoveryAnswer(ans) === state.pinConfig.recoveryAnswerHash) {
-          state.pinConfig = {
-            enabled: false,
-            hash: "",
-            recoveryQuestion: "",
-            recoveryAnswerHash: ""
-          };
-          saveState();
-          unlockApp();
-          currentPage = "settings";
-          renderAll();
-          showToast("Agenda déverrouillé ! Le code PIN a été réinitialisé.");
-        } else {
-          setPinError("Réponse de secours incorrecte.");
-        }
-      };
-
-      // Boutons Verrouillage rapide
-      document.getElementById("navLockBtn").onclick = function () {
-        lockApp();
-      };
-      document.getElementById("settingsQuickLockBtn").onclick = function () {
-        lockApp();
-      };
-
-      // Paramètres : Activer le code PIN
-      document.getElementById("pinSetupForm").onsubmit = function (e) {
-        e.preventDefault();
-        const p1 = document.getElementById("setupPinInput").value.trim();
-        const p2 = document.getElementById("setupPinConfirmInput").value.trim();
-        const q = document.getElementById("setupRecoveryQuestionInput").value.trim();
-        const a = document.getElementById("setupRecoveryAnswerInput").value.trim();
-
-        if (!/^\d{4}$/.test(p1)) {
-          showToast("Le code PIN doit contenir exactement 4 chiffres.");
-          return;
-        }
-        if (p1 !== p2) {
-          showToast("Les deux codes PIN ne correspondent pas.");
-          return;
-        }
-        if (!q || !a) {
-          showToast("Merci d'indiquer une question et une réponse de secours.");
-          return;
-        }
-
-        state.pinConfig = {
-          enabled: true,
-          hash: hashPin(p1),
-          recoveryQuestion: q,
-          recoveryAnswerHash: hashRecoveryAnswer(a)
-        };
-        saveState();
-        e.target.reset();
-        renderPinSettings();
-        showToast("Code PIN activé avec succès 🔒");
-      };
-
-      // Paramètres : Modifier le code PIN / question de secours
-      document.getElementById("togglePinChangeBtn").onclick = function () {
-        document.getElementById("pinDisableForm").classList.add("hidden");
-        document.getElementById("pinChangeForm").classList.toggle("hidden");
-      };
-      document.getElementById("cancelPinChangeBtn").onclick = function () {
-        document.getElementById("pinChangeForm").classList.add("hidden");
-      };
-      document.getElementById("pinChangeForm").onsubmit = function (e) {
-        e.preventDefault();
-        const curPin = document.getElementById("changeCurrentPinInput").value.trim();
-        const newPin = document.getElementById("changeNewPinInput").value.trim();
-        const confPin = document.getElementById("changeConfirmPinInput").value.trim();
-        const newQ = document.getElementById("changeRecoveryQuestionInput").value.trim();
-        const newA = document.getElementById("changeRecoveryAnswerInput").value.trim();
-
-        if (hashPin(curPin) !== state.pinConfig.hash) {
-          showToast("Le code PIN actuel est incorrect.");
-          return;
-        }
-        if (!/^\d{4}$/.test(newPin)) {
-          showToast("Le nouveau PIN doit contenir exactement 4 chiffres.");
-          return;
-        }
-        if (newPin !== confPin) {
-          showToast("Les deux nouveaux codes PIN ne correspondent pas.");
-          return;
-        }
-        if (!newQ) {
-          showToast("La question de secours ne peut pas être vide.");
-          return;
-        }
-
-        state.pinConfig.hash = hashPin(newPin);
-        state.pinConfig.recoveryQuestion = newQ;
-        if (newA) {
-          state.pinConfig.recoveryAnswerHash = hashRecoveryAnswer(newA);
-        }
-        saveState();
-        e.target.reset();
-        renderPinSettings();
-        showToast("Code PIN mis à jour 🔒");
-      };
-
-      // Paramètres : Désactiver le code PIN
-      document.getElementById("togglePinDisableBtn").onclick = function () {
-        document.getElementById("pinChangeForm").classList.add("hidden");
-        document.getElementById("pinDisableForm").classList.toggle("hidden");
-        document.getElementById("disableCurrentPinInput").focus();
-      };
-      document.getElementById("pinDisableForm").onsubmit = function (e) {
-        e.preventDefault();
-        const curPin = document.getElementById("disableCurrentPinInput").value.trim();
-        if (hashPin(curPin) !== state.pinConfig.hash) {
-          showToast("Code PIN incorrect.");
-          return;
-        }
-        state.pinConfig = {
-          enabled: false,
-          hash: "",
-          recoveryQuestion: "",
-          recoveryAnswerHash: ""
-        };
-        saveState();
-        e.target.reset();
-        renderPinSettings();
-        showToast("Code PIN désactivé.");
-      };
-
-      /* =========================================================
          15. IMPORTATION GOOGLE AGENDA (.ICS) & MINI-FAQ (v32)
          ========================================================= */
       function unfoldIcsLines(text) {
@@ -6077,7 +5505,7 @@
         if (e.target === this) closeFaqModal();
       });
       document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && !isLocked) {
+        if (e.key === "Escape") {
           closeFaqModal();
         }
       });
@@ -6457,14 +5885,112 @@
         if (el) el.textContent = msg || "";
       }
 
+      const CLOUD_LINK_KEY = "ziigi_agenda_cloud_link";
+      let cloudConflictPending = false;
+
+      function readCloudLink() {
+        try { return JSON.parse(localStorage.getItem(CLOUD_LINK_KEY) || "null"); } catch (err) { return null; }
+      }
+      function writeCloudLink(uid, updatedAt) {
+        try { localStorage.setItem(CLOUD_LINK_KEY, JSON.stringify({ uid: uid, updatedAt: updatedAt || 0 })); } catch (err) {}
+      }
+      function readDirtyStamp() {
+        try { return Number(localStorage.getItem(CLOUD_DIRTY_KEY) || 0) || 0; } catch (err) { return 0; }
+      }
+      function clearDirtyIfOlder(stamp) {
+        try {
+          if (readDirtyStamp() <= stamp) localStorage.removeItem(CLOUD_DIRTY_KEY);
+        } catch (err) {}
+      }
+
+      function stableStringify(v) {
+        if (Array.isArray(v)) return "[" + v.map(stableStringify).join(",") + "]";
+        if (v && typeof v === "object") {
+          return "{" + Object.keys(v).sort().map(function (k) {
+            return JSON.stringify(k) + ":" + stableStringify(v[k]);
+          }).join(",") + "}";
+        }
+        return JSON.stringify(v === undefined ? null : v);
+      }
+      function stateFingerprint(st) {
+        const c = Object.assign({}, st);
+        delete c.lastExportAt;
+        return stableStringify(c);
+      }
+
+      // Vrai si l'appareil contient autre chose que les exemples de démo / valeurs par défaut
+      function hasRealUserData() {
+        const notDemo = function (x) { return !(x && typeof x.id === "string" && x.id.startsWith("demo_")); };
+        if (Array.isArray(state.moments) && state.moments.some(notDemo)) return true;
+        if (isObj(state.tasksByDate)) {
+          for (const d of Object.keys(state.tasksByDate)) {
+            const list = state.tasksByDate[d];
+            if (Array.isArray(list) && list.some(notDemo)) return true;
+          }
+        }
+        if (Array.isArray(state.dumpItems) && state.dumpItems.some(notDemo)) return true;
+        if (isObj(state.wellnessByDate) && Object.keys(state.wellnessByDate).some(function (d) {
+          return !isDemoWellnessEntry(state.wellnessByDate[d]);
+        })) return true;
+        if (isObj(state.notesByDate) && Object.keys(state.notesByDate).some(function (d) {
+          const v = state.notesByDate[d];
+          return typeof v === "string" ? v.trim() !== "" : Boolean(v && Object.keys(v).length);
+        })) return true;
+        if (isObj(state.drawingsByDate) && Object.keys(state.drawingsByDate).length > 0) return true;
+        if (isObj(state.routineChecksByDate)) {
+          // La démo coche une seule routine (rout_1) : on ne la compte pas comme une vraie donnée
+          const days = Object.keys(state.routineChecksByDate);
+          if (days.length > 1) return true;
+          if (days.length === 1) {
+            const checks = state.routineChecksByDate[days[0]];
+            const keys = isObj(checks) ? Object.keys(checks).filter(function (k) { return checks[k]; }) : [];
+            if (!(keys.length === 1 && keys[0] === "rout_1")) return keys.length > 0;
+          }
+        }
+        return false;
+      }
+
+      function downloadJsonBackup(obj, prefix) {
+        try {
+          const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${prefix}-${toDateStr(new Date())}.json`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+
       function pushStateToCloud() {
-        if (!fbDb || !currentUser || isApplyingCloudUpdate) return;
+        if (!fbDb || !currentUser || isApplyingCloudUpdate || cloudConflictPending) return;
+        const startedAt = Date.now();
+        const uid = currentUser.uid;
+
+        // Firestore refuse les documents de plus de 1 Mo : on prévient au lieu d'échouer en silence
+        let approxBytes = 0;
+        try { approxBytes = new Blob([JSON.stringify(state)]).size; } catch (err) {}
+        if (approxBytes > 950000) {
+          updateCloudUi("⚠️ Agenda trop volumineux pour le cloud", true);
+          if (!pushStateToCloud.warned) {
+            pushStateToCloud.warned = true;
+            showToast("Ton agenda dépasse la taille permise pour la synchro cloud (surtout les dessins). Exporte une sauvegarde JSON et supprime d'anciens dessins.");
+          }
+          return;
+        }
         updateCloudUi("⏳ Synchronisation...", true);
-        fbDb.collection("agendas").doc(currentUser.uid).set({
-          data: state,
-          updatedAt: Date.now(),
+        fbDb.collection("agendas").doc(uid).set({
+          data: Object.assign({}, state, { pinConfig: firebase.firestore.FieldValue.delete() }),
+          updatedAt: startedAt,
           updatedBy: clientSessionId
         }, { merge: true }).then(function () {
+          writeCloudLink(uid, startedAt);
+          clearDirtyIfOlder(startedAt);
           updateCloudUi("☁️ Synchronisé", true);
         }).catch(function (err) {
           console.warn("Erreur synchro Firestore :", err);
@@ -6473,11 +5999,57 @@
       }
 
       scheduleCloudSave = function () {
-        if (!fbDb || !currentUser || isApplyingCloudUpdate) return;
+        if (!fbDb || !currentUser || isApplyingCloudUpdate || cloudConflictPending) return;
         clearTimeout(cloudSaveTimer);
         updateCloudUi("⏳ Enregistrement...", true);
         cloudSaveTimer = setTimeout(pushStateToCloud, 700);
       };
+
+      function applyCloudPayload(uid, payload) {
+        isApplyingCloudUpdate = true;
+        state = mergeWithDefaults(payload.data);
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (err) {}
+        writeCloudLink(uid, payload.updatedAt);
+        clearDirtyIfOlder(Date.now());
+        applyGentleMode();
+        initCollapsibleCards();
+        renderAll();
+        updateDemoBanner();
+        isApplyingCloudUpdate = false;
+        updateCloudUi("☁️ Synchronisé", true);
+      }
+
+      function hideCloudConflict() {
+        document.getElementById("cloudConflictModal").classList.add("hidden");
+      }
+
+      function showCloudConflict(uid, payload) {
+        cloudConflictPending = true;
+        clearTimeout(cloudSaveTimer);
+        updateCloudUi("⚠️ En attente de ton choix", true);
+        document.getElementById("cloudConflictModal").classList.remove("hidden");
+
+        document.getElementById("cloudKeepCloudBtn").onclick = function () {
+          const saved = downloadJsonBackup(state, "agenda-appareil-avant-cloud");
+          hideCloudConflict();
+          cloudConflictPending = false;
+          applyCloudPayload(uid, payload);
+          showToast(saved ? "Données du cloud appliquées. Sauvegarde de l'appareil téléchargée." : "Données du cloud appliquées.");
+        };
+        document.getElementById("cloudKeepLocalBtn").onclick = function () {
+          const saved = downloadJsonBackup(mergeWithDefaults(payload.data), "agenda-cloud-avant-remplacement");
+          hideCloudConflict();
+          cloudConflictPending = false;
+          pushStateToCloud();
+          showToast(saved ? "Données de l'appareil envoyées au cloud. Sauvegarde du cloud téléchargée." : "Données de l'appareil envoyées au cloud.");
+        };
+        document.getElementById("cloudLaterBtn").onclick = function () {
+          hideCloudConflict();
+          updateCloudUi("⏸️ Synchro en pause (choix à faire)", true);
+        };
+      }
 
       function startCloudListener(user) {
         if (unsubscribeSnapshot) {
@@ -6486,30 +6058,44 @@
         }
         if (!fbDb || !user) return;
 
+        let firstSnapshotHandled = false;
         const docRef = fbDb.collection("agendas").doc(user.uid);
         unsubscribeSnapshot = docRef.onSnapshot(function (doc) {
-          if (doc.exists) {
-            const payload = doc.data();
-            if (payload && payload.updatedBy === clientSessionId) {
-              updateCloudUi("☁️ Synchronisé", true);
+          if (cloudConflictPending) return;
+          if (!doc.exists) {
+            firstSnapshotHandled = true;
+            pushStateToCloud();
+            return;
+          }
+          const payload = doc.data();
+          if (payload && payload.updatedBy === clientSessionId) {
+            updateCloudUi("☁️ Synchronisé", true);
+            firstSnapshotHandled = true;
+            return;
+          }
+          if (!payload || !isObj(payload.data)) return;
+
+          // Première lecture de cette session : on protège les données locales
+          if (!firstSnapshotHandled) {
+            firstSnapshotHandled = true;
+            const link = readCloudLink();
+            const sameAccount = Boolean(link && link.uid === user.uid);
+            const dirty = readDirtyStamp() > 0;
+            const cloudUpdatedAt = Number(payload.updatedAt) || 0;
+            const cloudIsNewer = !sameAccount || cloudUpdatedAt > (Number(link.updatedAt) || 0);
+            const differs = stateFingerprint(state) !== stateFingerprint(mergeWithDefaults(payload.data));
+
+            if (differs && hasRealUserData() && (!sameAccount || dirty)) {
+              if (sameAccount && !cloudIsNewer) {
+                // Modifs locales pas encore envoyées, le cloud n'a pas bougé : on envoie simplement.
+                pushStateToCloud();
+                return;
+              }
+              showCloudConflict(user.uid, payload);
               return;
             }
-            if (payload && isObj(payload.data)) {
-              isApplyingCloudUpdate = true;
-              state = mergeWithDefaults(payload.data);
-              try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-              } catch (err) {}
-              applyGentleMode();
-              initCollapsibleCards();
-              renderAll();
-              updateDemoBanner();
-              isApplyingCloudUpdate = false;
-              updateCloudUi("☁️ Synchronisé", true);
-            }
-          } else {
-            pushStateToCloud();
           }
+          applyCloudPayload(user.uid, payload);
         }, function (err) {
           console.warn("Erreur lecture Firestore :", err);
           updateCloudUi("⚠️ Hors ligne", true);
@@ -6538,6 +6124,8 @@
                 unsubscribeSnapshot();
                 unsubscribeSnapshot = null;
               }
+              cloudConflictPending = false;
+              hideCloudConflict();
               updateCloudUi("☁️ Hors ligne (local)", false);
             }
           });
@@ -6659,9 +6247,6 @@
       // Lancement initial
       renderOwnerTitle();
       applyTheme();
-      if (state.pinConfig && state.pinConfig.enabled && state.pinConfig.hash) {
-        lockApp();
-      }
       renderAll();
     });
   </script>
