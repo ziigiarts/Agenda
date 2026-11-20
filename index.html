@@ -3,7 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agenda de …</title>
+  <title>Mon agenda</title>
+  <meta name="theme-color" content="#2563EA" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Mon agenda" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
+  <!-- Firebase SDK (Auth + Firestore) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <!-- Google Fonts : Quicksand (titres & dates), Nunito (corps, boutons, pastilles & graphique), Satisfy (citation) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -268,10 +279,10 @@
       --surface-soft: #FFF9FB;
       --surface-muted: #FCEBF2;
       --input-bg: #FFFFFF;
-      --border: #F5D5E4;
-      --border-subtle: #F5D5E4;
+      --border: #E5A9C5;
+      --border-subtle: #EBC2D6;
       --text: #442336;
-      --text-muted: #895D76;
+      --text-muted: #6B3F58;
 
       --accent: #EB4899;
       --accent-hover: #DB2777;
@@ -347,10 +358,10 @@
       --surface-soft: #FFF7DF;
       --surface-muted: #F7E1A4;
       --input-bg: #FFFBF0;
-      --border: #FDC153;
-      --border-subtle: #F2C978;
+      --border: #D9962B;
+      --border-subtle: #DFB05A;
       --text: #3A232B;
-      --text-muted: #7F5B65;
+      --text-muted: #5C3A44;
 
       --accent: #B54D66;
       --accent-hover: #993C53;
@@ -426,10 +437,10 @@
       --surface-soft: #F6F6F6;
       --surface-muted: #E5E5E5;
       --input-bg: #FFFFFF;
-      --border: #D4D4D4;
-      --border-subtle: #D4D4D4;
+      --border: #737373;
+      --border-subtle: #A3A3A3;
       --text: #111111;
-      --text-muted: #525252;
+      --text-muted: #3D3D3D;
 
       --accent: #171717;
       --accent-hover: #000000;
@@ -2099,6 +2110,254 @@
         grid-template-columns: 1fr;
       }
     }
+  
+    /* =========================================================
+       13. ACCESSIBILITÉ, CLOUD, MODE CRAYON & MODE JOUR DOUX (v39)
+       ========================================================= */
+    .pill-btn.selected::before {
+      content: "✓";
+      font-weight: 800;
+      font-size: 0.85em;
+    }
+
+    .cloud-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: var(--radius-pill);
+      background: var(--surface-soft);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .cloud-status-pill.is-connected {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-soft-text);
+    }
+    .cloud-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin: 0.25rem 0;
+    }
+    .cloud-divider::before,
+    .cloud-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+    .btn-google {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      padding: 0.62rem 1rem;
+      font-weight: 700;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      color: var(--text);
+    }
+    .btn-google:hover {
+      background: var(--surface-muted);
+    }
+    .cloud-error-msg {
+      color: var(--danger);
+      font-size: 0.84rem;
+      font-weight: 700;
+      min-height: 1.1rem;
+    }
+
+    /* Rappel sauvegarde douce */
+    .backup-reminder-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      padding: 0.72rem 1rem;
+      margin-bottom: 0.95rem;
+      border-radius: 14px;
+      background: var(--surface-soft);
+      border: 1.5px solid var(--border-subtle);
+      font-size: 0.88rem;
+    }
+
+    /* Cartes repliables & Mode jour doux */
+    .card-collapse-btn {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      border: 1px solid var(--border-subtle);
+      background: var(--surface-soft);
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .card.is-collapsed > :not(.card-header) {
+      display: none !important;
+    }
+    .gentle-mode-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 0.38rem 0.82rem;
+      border-radius: var(--radius-pill);
+    }
+    .gentle-mode-btn.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-soft-text);
+    }
+    body.gentle-day-mode .gentle-hide {
+      display: none !important;
+    }
+    .gentle-mode-banner {
+      display: none;
+      margin-bottom: 0.95rem;
+      padding: 0.7rem 1rem;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      border: 1.5px solid var(--accent);
+      color: var(--accent-soft-text);
+      font-size: 0.89rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    body.gentle-day-mode .gentle-mode-banner {
+      display: block;
+    }
+
+    /* Récap vide bienveillant */
+    .recap-empty-state {
+      text-align: center;
+      padding: 2rem 1.2rem;
+      border-radius: 14px;
+      background: var(--surface-soft);
+      border: 1.5px dashed var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .recap-empty-icon {
+      font-size: 2.2rem;
+      line-height: 1;
+    }
+
+    /* Aperçu Mois */
+    .preview-task-line {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      padding: 0.32rem 0.55rem;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+    }
+    .preview-task-line.is-done {
+      text-decoration: line-through;
+      color: var(--text-muted);
+      opacity: 0.8;
+    }
+
+    /* Mode Crayon (Bloc-notes libre) */
+    .note-mode-switch {
+      display: inline-flex;
+      gap: 0.25rem;
+      background: var(--surface-soft);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 0.2rem;
+    }
+    .note-mode-switch button {
+      border: none;
+      background: transparent;
+      padding: 0.28rem 0.65rem;
+      border-radius: 7px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .note-mode-switch button.active {
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+    .draw-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 0.65rem;
+      background: var(--surface-soft);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+    }
+    .draw-color-btn {
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      border-radius: 50%;
+      border: 2px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+    .draw-color-btn.active {
+      outline: 2.5px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .draw-tool-btn {
+      padding: 0.28rem 0.58rem;
+      font-size: 0.8rem;
+      border-radius: 8px;
+    }
+    .draw-tool-btn.active {
+      background: var(--accent);
+      color: var(--accent-text);
+      border-color: var(--accent);
+    }
+    .draw-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      border-radius: 13px;
+      border: 1.5px solid var(--border-subtle);
+      overflow: hidden;
+      background-color: #FFFFFF;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .draw-canvas-wrap.paper-lined {
+      background-image: linear-gradient(to bottom, transparent 27px, rgba(37, 99, 234, 0.14) 28px);
+      background-size: 100% 28px;
+    }
+    .draw-canvas-wrap.paper-dotted {
+      background-image: radial-gradient(rgba(32, 41, 56, 0.22) 1.3px, transparent 1.3px);
+      background-size: 20px 20px;
+    }
+    #dayDrawCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
   </style>
 </head>
 <body>
@@ -2107,7 +2366,7 @@
     <div class="pin-card">
       <div class="pin-lock-icon" aria-hidden="true">🔒</div>
       <div>
-        <h2 id="pinLockTitle" class="pin-lock-title">Agenda de …</h2>
+        <h2 id="pinLockTitle" class="pin-lock-title">Mon agenda</h2>
         <p id="pinLockSubtitle" class="muted">Entre ton code PIN à 4 chiffres</p>
       </div>
 
@@ -2154,13 +2413,18 @@
   <div class="app-shell">
     <!-- CARTE 1 : EN-TÊTE CENTRÉ -->
     <header class="top-card">
-      <h1 id="appTitleDisplay" class="app-title">Agenda de …</h1>
+      <h1 id="appTitleDisplay" class="app-title">Mon agenda</h1>
       <nav class="main-nav" aria-label="Navigation principale">
         <button id="navAgendaBtn" class="active" type="button">📅 Mon agenda</button>
+        <button id="navCloudBtn" class="nav-icon-btn" type="button" title="Compte & Synchro Cloud" aria-label="Compte et Synchro Cloud">☁️</button>
         <button id="navSettingsBtn" class="nav-icon-btn" type="button" title="Paramètres" aria-label="Paramètres">⚙️</button>
         <button id="navFaqBtn" class="nav-icon-btn" type="button" title="Aide & FAQ" aria-label="Aide et FAQ">❓</button>
         <button id="navLockBtn" class="nav-icon-btn hidden" type="button" title="Verrouiller l'agenda" aria-label="Verrouiller l'agenda">🔒</button>
       </nav>
+      <div class="row" style="justify-content:center;">
+        <button id="cloudStatusPill" type="button" class="cloud-status-pill" title="Gérer mon compte cloud">☁️ Hors ligne (local)</button>
+        <button id="gentleModeToggleBtn" type="button" class="gentle-mode-btn" title="Masquer le superflu pour les journées plus difficiles">🌿 Mode jour doux</button>
+      </div>
     </header>
 
     <!-- CARTE 2 : BANDEAU PHRASE INSPIRANTE CENTRÉ -->
@@ -2173,6 +2437,16 @@
          PAGE 1 : MON AGENDA
          ======================================================= -->
     <main id="agendaPage">
+      <div id="backupReminderBanner" class="backup-reminder-banner hidden" role="status">
+        <span id="backupReminderText">💾 Pense à faire une petite sauvegarde JSON de ton agenda.</span>
+        <div class="row">
+          <button id="bannerExportBtn" type="button" class="sm primary">⬇️ Sauvegarder</button>
+          <button id="bannerDismissBtn" type="button" class="sm ghost" aria-label="Fermer">✕</button>
+        </div>
+      </div>
+      <div class="gentle-mode-banner">
+        🌿 Mode jour doux activé — Seul l'essentiel est affiché (Horaire, Prendre soin de moi et Bloc-notes).
+      </div>
       <!-- CARTE 3 : DATE & SÉLECTEUR 4 VUES CENTRÉ -->
       <section class="top-card" aria-label="Navigation dans le temps">
         <div id="currentDateLabel" class="current-date-label"></div>
@@ -2194,7 +2468,7 @@
         <!-- Colonne gauche -->
         <div class="stack-lg">
           <!-- Horaire -->
-          <article class="card">
+          <article class="card" data-card-id="horaire">
             <div class="card-header">
               <h2 class="card-title">Horaire</h2>
               <button id="openAddMomentBtn" class="primary sm" type="button">+ Nouveau moment</button>
@@ -2203,7 +2477,7 @@
           </article>
 
           <!-- À faire aujourd'hui -->
-          <article class="card">
+          <article class="card gentle-hide" data-card-id="tasks">
             <div class="card-header">
               <h2 class="card-title">À faire aujourd'hui</h2>
               <span class="muted">sans heure fixe</span>
@@ -2216,7 +2490,7 @@
           </article>
 
           <!-- Vide ton sac -->
-          <article class="card">
+          <article class="card gentle-hide" data-card-id="dump">
             <div class="card-header">
               <h2 class="card-title">Vide ton sac</h2>
               <span class="muted">vider son esprit sans pression</span>
@@ -2228,20 +2502,50 @@
             <div id="dumpList" class="stack"></div>
           </article>
 
-          <!-- Bloc-notes libre -->
-          <article class="card">
+          <!-- Bloc-notes libre (Texte + Mode Crayon v39) -->
+          <article class="card" data-card-id="notes">
             <div class="card-header">
-              <h2 class="card-title">Bloc-notes libre</h2>
-              <span id="noteSavedBadge" class="saved-badge">✓ Sauvegardé</span>
+              <div class="row" style="gap: 0.6rem;">
+                <h2 class="card-title">Bloc-notes libre</h2>
+                <span id="noteSavedBadge" class="saved-badge">✓ Sauvegardé</span>
+              </div>
+              <div class="note-mode-switch" role="tablist" aria-label="Mode du bloc-notes">
+                <button id="noteModeTextBtn" type="button" class="active">⌨️ Texte</button>
+                <button id="noteModeDrawBtn" type="button">✏️ Crayon</button>
+              </div>
             </div>
+
             <textarea id="dayNoteInput" rows="5" placeholder="Un espace calme pour déposer tes pensées, idées en vrac ou petits rappels..."></textarea>
+
+            <div id="dayDrawSection" class="stack hidden">
+              <div class="draw-toolbar">
+                <button type="button" class="draw-color-btn active" data-draw-color="#202938" style="background:#202938;" title="Encre foncée" aria-label="Encre foncée"></button>
+                <button type="button" class="draw-color-btn" data-draw-color="#2563EA" style="background:#2563EA;" title="Bleu" aria-label="Bleu"></button>
+                <button type="button" class="draw-color-btn" data-draw-color="#FF7177" style="background:#FF7177;" title="Corail" aria-label="Corail"></button>
+                <button type="button" class="draw-color-btn" data-draw-color="#EAB308" style="background:#EAB308;" title="Jaune" aria-label="Jaune"></button>
+                <button type="button" class="draw-color-btn" data-draw-color="#0D9488" style="background:#0D9488;" title="Vert doux" aria-label="Vert doux"></button>
+
+                <button type="button" class="draw-tool-btn active" data-draw-size="2.5" title="Pointe fine">Fin</button>
+                <button type="button" class="draw-tool-btn" data-draw-size="5" title="Pointe moyenne">Moyen</button>
+                <button type="button" class="draw-tool-btn" data-draw-size="9" title="Pointe large">Large</button>
+
+                <button id="drawEraserBtn" type="button" class="draw-tool-btn" title="Gomme">🧽 Gomme</button>
+                <button id="drawPalmBtn" type="button" class="draw-tool-btn" title="Ignorer les doigts (Apple Pencil uniquement)">✋ Rejet paume</button>
+                <button id="drawPaperBtn" type="button" class="draw-tool-btn" title="Changer le fond du papier">📄 Ligné</button>
+                <button id="drawUndoBtn" type="button" class="draw-tool-btn" title="Annuler le dernier trait">↩️</button>
+                <button id="drawClearBtn" type="button" class="draw-tool-btn danger" title="Effacer le dessin du jour">🗑️</button>
+              </div>
+              <div id="drawCanvasWrap" class="draw-canvas-wrap paper-lined">
+                <canvas id="dayDrawCanvas"></canvas>
+              </div>
+            </div>
           </article>
         </div>
 
         <!-- Colonne droite -->
         <div class="stack-lg">
           <!-- Mes routines de vie -->
-          <article class="card">
+          <article class="card gentle-hide" data-card-id="routines">
             <div class="card-header">
               <h2 class="card-title">Mes routines de vie</h2>
               <span class="muted">À ton rythme</span>
@@ -2254,7 +2558,7 @@
           </article>
 
           <!-- Prendre soin de moi -->
-          <article class="card">
+          <article class="card" data-card-id="wellness">
             <div class="card-header">
               <h2 class="card-title">Prendre soin de moi</h2>
               <span class="muted">Aucun jugement</span>
@@ -2319,7 +2623,7 @@
           <div id="monthLegend" class="month-legend"></div>
         </article>
 
-        <article class="card">
+        <article id="monthPreviewCard" class="card">
           <div class="card-header">
             <div>
               <h2 id="monthPreviewTitle" class="card-title" style="text-transform: capitalize;"></h2>
@@ -2369,6 +2673,11 @@
             </button>
           </div>
 
+          <div id="recapEmptyState" class="recap-empty-state hidden">
+            <div class="recap-empty-icon" aria-hidden="true">🌱</div>
+            <strong style="font-family:'Quicksand',sans-serif; font-size:1.05rem;">Reviens dans quelques jours</strong>
+            <p class="muted" style="max-width:440px;">Dès que tu auras noté au moins 2 journées dans « Prendre soin de moi » (état, sommeil, eau ou repas), tes courbes et ton tableau apparaîtront ici en douceur.</p>
+          </div>
           <div id="recapChartWrapper" class="chart-wrapper">
             <svg id="recapChartSvg" class="chart-svg" viewBox="0 0 600 265" role="img" aria-label="Graphique d'évolution de l'état général, du sommeil, des verres d'eau et des repas"></svg>
           </div>
@@ -2479,12 +2788,21 @@
               </span>
             </button>
           </div>
+          <hr class="pin-divider" />
+          <div class="sub-block">
+            <label class="sub-label" for="defaultViewSelect">Vue à l'ouverture de l'agenda</label>
+            <select id="defaultViewSelect">
+              <option value="day">Vue Jour (par défaut)</option>
+              <option value="month">Vue Mois (calendrier complet)</option>
+            </select>
+          </div>
         </article>
 
         <!-- Sauvegarde & Données -->
         <article class="card">
           <h2 class="card-title">Sauvegarde &amp; Données</h2>
-          <p class="muted">Tes données restent stockées localement sur ton appareil.</p>
+          <p class="muted">Hors connexion, tes données restent en local sur ton appareil. Connectée au cloud (☁️), elles se synchronisent dans ton espace privé Firebase.</p>
+          <p id="lastExportStatus" class="muted" style="font-weight:700;"></p>
           <div class="row">
             <button id="exportJsonBtn" class="primary sm" type="button">⬇️ Exporter JSON</button>
             <button id="importJsonBtn" class="sm btn-soft" type="button">⬆️ Importer JSON</button>
@@ -2767,20 +3085,24 @@
         </details>
 
         <details class="faq-item">
-          <summary>💾 Où sont enregistrées mes données ?</summary>
+          <summary>💾 Où sont enregistrées mes données (Local vs Cloud) ?</summary>
           <div class="faq-answer">
-            <p>Toutes tes données restent enregistrées <strong>100 % en local</strong> sur ton appareil, dans ton navigateur. Rien n'est envoyé sur un serveur externe.</p>
-            <p>Pense à utiliser <strong>⬇️ Exporter JSON</strong> dans les Paramètres avant de changer d'appareil ou de vider l'historique/les données de ton navigateur.</p>
+            <ul>
+              <li><strong>Sans compte (hors connexion) :</strong> tes données restent <strong>100 % en local</strong> dans le stockage de ton navigateur. Rien n'est envoyé sur un serveur.</li>
+              <li><strong>Avec compte Cloud (☁️ Google ou courriel) :</strong> ton agenda (horaire, tâches, routines, suivi bien-être, notes et dessins) est synchronisé dans ton espace privé <strong>Firebase Firestore</strong> afin de te suivre sur tous tes appareils, tout en gardant une copie locale pour le mode hors ligne.</li>
+            </ul>
+            <p>Sur iPad/Safari, le navigateur peut parfois vider le stockage local d'un site peu utilisé : pense à te connecter au cloud ou à faire un <strong>⬇️ Exporter JSON</strong> régulièrement.</p>
           </div>
         </details>
 
         <details class="faq-item">
-          <summary>🔒 Comment fonctionne le code PIN et l'option de secours ?</summary>
+          <summary>🔒 Comment fonctionne le code PIN et quelle sécurité offre-t-il ?</summary>
           <div class="faq-answer">
-            <p>Dans <strong>⚙️ Paramètres</strong> &gt; <strong>Sécurité &amp; Code PIN</strong>, tu peux activer un code à 4 chiffres accompagné d'une question de secours.</p>
+            <p>Dans <strong>⚙️ Paramètres</strong> &gt; <strong>Sécurité &amp; Code PIN</strong>, tu peux activer un code à 4 chiffres et une question de secours. Ton PIN et ta réponse secrète sont <strong>hachés en SHA-256</strong> (jamais enregistrés en clair).</p>
+            <p><strong>Transparence :</strong> ce verrouillage protège efficacement ton écran contre un regard indiscret sur ton appareil, mais comme il fonctionne côté navigateur, il ne remplace pas un chiffrement médical si quelqu'un inspecte directement les outils de développement de ton navigateur.</p>
             <ul>
-              <li>Une fois activé, un bouton <strong>🔒</strong> apparaît dans la barre du haut pour verrouiller l'agenda en un clic.</li>
-              <li>En cas d'oubli, touche <strong>« Code oublié ? »</strong> sur l'écran de verrouillage et entre ta réponse secrète pour déverrouiller et réinitialiser le PIN sans perdre tes données.</li>
+              <li>Une fois activé, un bouton <strong>🔒</strong> apparaît en haut pour verrouiller l'agenda en un clic.</li>
+              <li>En cas d'oubli, touche <strong>« Code oublié ? »</strong> et entre ta réponse secrète pour réinitialiser le PIN sans perdre tes données.</li>
             </ul>
           </div>
         </details>
@@ -2806,6 +3128,56 @@
       </div>
       <div class="row" style="justify-content: flex-end; margin-top: 0.25rem;">
         <button id="faqDoneBtn" class="primary sm" type="button">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE COMPTE & SYNCHRO CLOUD (v39) -->
+  <div id="cloudModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="cloudModalTitle">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="card-header">
+        <h3 id="cloudModalTitle" class="card-title">☁️ Compte &amp; Synchro Cloud</h3>
+        <button id="closeCloudModalBtn" class="ghost sm" type="button" aria-label="Fermer">✕</button>
+      </div>
+
+      <div id="cloudLoggedOutView" class="stack">
+        <p class="muted">Connecte-toi pour synchroniser ton agenda (horaire, tâches, suivi bien-être, notes et dessins) dans ton espace privé Firebase sur tous tes appareils.</p>
+        <button id="googleSignInBtn" type="button" class="btn-google">
+          <span>🔵</span> Continuer avec Google
+        </button>
+
+        <div class="cloud-divider">ou avec ton courriel</div>
+
+        <form id="emailAuthForm" class="stack">
+          <div>
+            <label class="sub-label" for="authEmailInput">Courriel</label>
+            <input id="authEmailInput" type="email" placeholder="ton@courriel.com" autocomplete="email" required />
+          </div>
+          <div>
+            <label class="sub-label" for="authPasswordInput">Mot de passe</label>
+            <input id="authPasswordInput" type="password" placeholder="••••••••" autocomplete="current-password" minlength="6" required />
+          </div>
+          <div id="cloudAuthError" class="cloud-error-msg" aria-live="polite"></div>
+          <div class="row" style="justify-content: space-between;">
+            <button id="emailSignUpBtn" type="button" class="btn-soft sm">Créer un compte</button>
+            <button id="emailSignInBtn" type="submit" class="primary sm">Se connecter</button>
+          </div>
+          <div style="text-align: right;">
+            <button id="forgotPasswordBtn" type="button" class="ghost sm">Mot de passe oublié ?</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="cloudLoggedInView" class="stack hidden">
+        <div class="preview-box">
+          <span class="sub-label">Connectée en tant que</span>
+          <strong id="cloudUserEmail" style="overflow-wrap: anywhere;"></strong>
+          <span id="cloudSyncDetail" class="muted">☁️ Synchronisation automatique activée</span>
+        </div>
+        <div class="row" style="justify-content: space-between; margin-top: 0.25rem;">
+          <button id="cloudForceSyncBtn" type="button" class="btn-soft sm">🔄 Synchroniser</button>
+          <button id="cloudSignOutBtn" type="button" class="danger-outline sm">Se déconnecter</button>
+        </div>
       </div>
     </div>
   </div>
@@ -3092,6 +3464,11 @@
           routineChecksByDate: {},
           wellnessByDate: {},
           notesByDate: {},
+          drawingsByDate: {},
+          defaultView: "day",
+          gentleMode: false,
+          collapsedCards: {},
+          lastExportAt: null,
           pinConfig: {
             enabled: false,
             hash: "",
@@ -3251,6 +3628,11 @@
           routineChecksByDate: isObj(raw.routineChecksByDate) ? raw.routineChecksByDate : {},
           wellnessByDate: normalizeWellnessMap(raw.wellnessByDate),
           notesByDate: isObj(raw.notesByDate) ? raw.notesByDate : {},
+          drawingsByDate: isObj(raw.drawingsByDate) ? raw.drawingsByDate : {},
+          defaultView: raw.defaultView === "month" ? "month" : "day",
+          gentleMode: Boolean(raw.gentleMode),
+          collapsedCards: isObj(raw.collapsedCards) ? raw.collapsedCards : {},
+          lastExportAt: typeof raw.lastExportAt === "number" ? raw.lastExportAt : null,
           pinConfig: isObj(raw.pinConfig)
             ? {
                 enabled: Boolean(raw.pinConfig.enabled && raw.pinConfig.hash),
@@ -3275,7 +3657,7 @@
 
       let state = loadState();
       let currentPage = "agenda"; // "agenda" | "settings"
-      let currentView = "day";    // "day" | "week" | "month" | "recap"
+      let currentView = state.defaultView === "month" ? "month" : "day";    // "day" | "week" | "month" | "recap"
       let selectedDate = toDateStr(new Date());
       let recapDays = 7;
       let recapSeriesVisible = { mood: true, sleep: true, water: true, meals: true };
@@ -3283,12 +3665,14 @@
       let noteSavedTimer = null;
       let resizeTimer = null;
 
+      let scheduleCloudSave = function () {};
       function saveState() {
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         } catch (err) {
           showToast("Impossible de sauvegarder localement.");
         }
+        scheduleCloudSave();
       }
 
       /* =========================================================
@@ -3375,7 +3759,7 @@
          ========================================================= */
       function renderOwnerTitle() {
         const clean = (state.ownerName || "").trim();
-        const title = clean ? `Agenda de ${clean}` : "Agenda de …";
+        const title = clean ? `Agenda de ${clean}` : "Mon agenda";
         document.getElementById("appTitleDisplay").textContent = title;
         const lockTitle = document.getElementById("pinLockTitle");
         if (lockTitle) lockTitle.textContent = title;
@@ -3871,8 +4255,9 @@
           careBox.appendChild(btn);
         });
 
-        // 6. Bloc-notes libre
+        // 6. Bloc-notes libre (Texte & Dessin)
         document.getElementById("dayNoteInput").value = state.notesByDate[selectedDate] || "";
+        if (typeof loadDayDrawing === "function") loadDayDrawing();
       }
 
       /* =========================================================
@@ -4025,6 +4410,10 @@
             selectedDate = dStr;
             renderMonthView();
             document.getElementById("currentDateLabel").textContent = formatMonthYear(selectedDate);
+            const previewCard = document.getElementById("monthPreviewCard");
+            if (previewCard) {
+              previewCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
           };
 
           grid.appendChild(btn);
@@ -4077,18 +4466,15 @@
           });
         }
 
-        let rightHtml = `<span class="sub-label">Tâches &amp; bien-être</span>`;
+        let rightHtml = `<span class="sub-label">Tâches du jour</span>`;
         if (tasks.length === 0) {
-          rightHtml += `<p class="muted">Aucune tâche inscrite.</p>`;
+          rightHtml += `<p class="muted">Aucune tâche inscrite pour cette journée.</p>`;
         } else {
           const doneCount = tasks.filter(function (t) { return t.done; }).length;
-          rightHtml += `<p style="font-size:0.88rem; font-weight:600;">✓ ${doneCount} / ${tasks.length} tâche(s) complétée(s)</p>`;
-          tasks.slice(0, 3).forEach(function (t) {
-            rightHtml += `<div class="muted" style="font-size:0.84rem; ${t.done ? "text-decoration:line-through;" : ""}">${t.done ? "☑" : "☐"} ${escapeHtml(t.text)}</div>`;
+          rightHtml += `<p class="muted" style="font-size:0.82rem; font-weight:700;">✓ ${doneCount} / ${tasks.length} complétée(s)</p>`;
+          tasks.forEach(function (t) {
+            rightHtml += `<div class="preview-task-line ${t.done ? "is-done" : ""}"><span>${t.done ? "☑" : "☐"}</span><span style="flex:1;">${escapeHtml(t.text)}</span></div>`;
           });
-          if (tasks.length > 3) {
-            rightHtml += `<div class="muted" style="font-size:0.8rem;">+ ${tasks.length - 3} autre(s)...</div>`;
-          }
         }
 
         const wellPills = [];
@@ -4146,7 +4532,26 @@
           });
         }
 
-        drawRecapChart(points);
+        const daysWithData = points.filter(function (p) {
+          return Boolean(p.mood || p.sleep || p.waterGlasses > 0 || p.mealsCount > 0);
+        }).length;
+        const emptyEl = document.getElementById("recapEmptyState");
+        const chartWrapEl = document.getElementById("recapChartWrapper");
+        const legendEl = document.getElementById("recapLegend");
+        const detailEl = document.getElementById("recapDetailBox");
+
+        if (daysWithData < 2) {
+          if (emptyEl) emptyEl.classList.remove("hidden");
+          if (chartWrapEl) chartWrapEl.classList.add("hidden");
+          if (legendEl) legendEl.classList.add("hidden");
+          if (detailEl) detailEl.classList.add("hidden");
+        } else {
+          if (emptyEl) emptyEl.classList.add("hidden");
+          if (chartWrapEl) chartWrapEl.classList.remove("hidden");
+          if (legendEl) legendEl.classList.remove("hidden");
+          if (detailEl) detailEl.classList.remove("hidden");
+          drawRecapChart(points);
+        }
         renderRecapStatsTableAndInsights(points);
       }
 
@@ -4517,6 +4922,9 @@
       function renderSettings() {
         applyTheme();
         document.getElementById("ownerNameInput").value = state.ownerName || "";
+        const dvSel = document.getElementById("defaultViewSelect");
+        if (dvSel) dvSel.value = state.defaultView === "month" ? "month" : "day";
+        if (typeof updateBackupReminder === "function") updateBackupReminder();
         renderPinSettings();
 
         const moodsList = document.getElementById("settingsMoodsList");
@@ -4927,6 +5335,9 @@
         a.download = `agenda-sauvegarde-${toDateStr(new Date())}.json`;
         a.click();
         URL.revokeObjectURL(url);
+        state.lastExportAt = Date.now();
+        saveState();
+        if (typeof updateBackupReminder === "function") updateBackupReminder();
         showToast("Sauvegarde JSON exportée.");
       };
 
@@ -5514,6 +5925,578 @@
           closeFaqModal();
         }
       });
+
+      /* =========================================================
+         16. CARTES REPLIABLES, MODE JOUR DOUX, RAPPEL SAUVEGARDE (v39)
+         ========================================================= */
+      let backupBannerDismissed = false;
+
+      function initCollapsibleCards() {
+        document.querySelectorAll("#dayView article.card[data-card-id]").forEach(function (card) {
+          const cardId = card.dataset.cardId;
+          const header = card.querySelector(".card-header");
+          if (!header || header.querySelector(".card-collapse-btn")) return;
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "card-collapse-btn";
+          btn.title = "Replier ou déplier cette section";
+          btn.setAttribute("aria-label", "Replier ou déplier cette section");
+
+          function syncCardCollapse() {
+            const isCollapsed = Boolean(state.collapsedCards && state.collapsedCards[cardId]);
+            card.classList.toggle("is-collapsed", isCollapsed);
+            btn.textContent = isCollapsed ? "▸" : "▾";
+            btn.setAttribute("aria-expanded", isCollapsed ? "false" : "true");
+          }
+
+          btn.onclick = function () {
+            if (!isObj(state.collapsedCards)) state.collapsedCards = {};
+            state.collapsedCards[cardId] = !state.collapsedCards[cardId];
+            saveState();
+            syncCardCollapse();
+          };
+
+          header.appendChild(btn);
+          syncCardCollapse();
+        });
+      }
+
+      function applyGentleMode() {
+        const active = Boolean(state.gentleMode);
+        document.body.classList.toggle("gentle-day-mode", active);
+        const btn = document.getElementById("gentleModeToggleBtn");
+        if (btn) {
+          btn.classList.toggle("active", active);
+          btn.textContent = active ? "🌿 Mode jour doux : Actif" : "🌿 Mode jour doux";
+        }
+      }
+
+      document.getElementById("gentleModeToggleBtn").onclick = function () {
+        state.gentleMode = !state.gentleMode;
+        saveState();
+        applyGentleMode();
+        showToast(state.gentleMode ? "Mode jour doux activé 🌿" : "Affichage complet rétabli.");
+      };
+
+      const defaultViewSelectEl = document.getElementById("defaultViewSelect");
+      if (defaultViewSelectEl) {
+        defaultViewSelectEl.onchange = function (e) {
+          state.defaultView = e.target.value === "month" ? "month" : "day";
+          saveState();
+          showToast(state.defaultView === "month" ? "L'agenda s'ouvrira sur la vue Mois." : "L'agenda s'ouvrira sur la vue Jour.");
+        };
+      }
+
+      function updateBackupReminder() {
+        const statusEl = document.getElementById("lastExportStatus");
+        const bannerEl = document.getElementById("backupReminderBanner");
+        const bannerText = document.getElementById("backupReminderText");
+
+        const last = state.lastExportAt;
+        const daysAgo = last ? Math.floor((Date.now() - last) / 86400000) : null;
+
+        if (statusEl) {
+          if (daysAgo === null) {
+            statusEl.textContent = "💾 Dernière sauvegarde JSON : aucune enregistrée";
+          } else if (daysAgo === 0) {
+            statusEl.textContent = "💾 Dernière sauvegarde JSON : aujourd'hui";
+          } else {
+            statusEl.textContent = `💾 Dernière sauvegarde JSON : il y a ${daysAgo} jour(s)`;
+          }
+        }
+
+        const isCloudConnected = Boolean(typeof currentUser !== "undefined" && currentUser);
+        if (bannerEl) {
+          if (!isCloudConnected && !backupBannerDismissed && (daysAgo === null || daysAgo >= 14)) {
+            bannerText.textContent = daysAgo === null
+              ? "💾 Tu es en mode local : pense à faire une sauvegarde JSON ou à te connecter au cloud (☁️)."
+              : `💾 Dernière sauvegarde JSON il y a ${daysAgo} jours — pense à exporter une copie.`;
+            bannerEl.classList.remove("hidden");
+          } else {
+            bannerEl.classList.add("hidden");
+          }
+        }
+      }
+
+      document.getElementById("bannerExportBtn").onclick = function () {
+        document.getElementById("exportJsonBtn").click();
+      };
+      document.getElementById("bannerDismissBtn").onclick = function () {
+        backupBannerDismissed = true;
+        document.getElementById("backupReminderBanner").classList.add("hidden");
+      };
+
+      /* =========================================================
+         17. MODE CRAYON DANS LE BLOC-NOTES LIBRE (v39)
+         ========================================================= */
+      let noteMode = "text";
+      let drawColor = "#202938";
+      let drawSize = 2.5;
+      let drawEraser = false;
+      let drawPalmReject = false;
+      const drawPapers = [
+        { cls: "paper-lined", label: "📄 Ligné" },
+        { cls: "paper-dotted", label: "📄 Pointillé" },
+        { cls: "", label: "📄 Uni" }
+      ];
+      let drawPaperIdx = 0;
+      let isDrawing = false;
+      let activePointerId = null;
+      let lastDrawPt = null;
+      let drawHistory = [];
+
+      const drawCanvas = document.getElementById("dayDrawCanvas");
+      const drawCtx = drawCanvas ? drawCanvas.getContext("2d") : null;
+      const drawWrap = document.getElementById("drawCanvasWrap");
+
+      function resizeDrawCanvas(preserveContent) {
+        if (!drawCanvas || !drawCtx || !drawWrap) return;
+        const rect = drawWrap.getBoundingClientRect();
+        if (rect.width < 10 || rect.height < 10) return;
+
+        let snapshot = null;
+        if (preserveContent && drawCanvas.width > 0 && drawCanvas.height > 0) {
+          snapshot = drawCanvas.toDataURL("image/png");
+        }
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        drawCanvas.width = Math.round(rect.width * dpr);
+        drawCanvas.height = Math.round(rect.height * dpr);
+        drawCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        drawCtx.lineCap = "round";
+        drawCtx.lineJoin = "round";
+
+        if (snapshot) {
+          const img = new Image();
+          img.onload = function () {
+            drawCtx.drawImage(img, 0, 0, rect.width, rect.height);
+          };
+          img.src = snapshot;
+        }
+      }
+
+      function loadDayDrawing() {
+        if (!drawCanvas || !drawCtx || !drawWrap) return;
+        drawHistory = [];
+        if (noteMode !== "draw") return;
+        resizeDrawCanvas(false);
+        const rect = drawWrap.getBoundingClientRect();
+        drawCtx.clearRect(0, 0, rect.width, rect.height);
+
+        const saved = state.drawingsByDate && state.drawingsByDate[selectedDate];
+        if (saved && typeof saved === "string" && saved.startsWith("data:image/")) {
+          const img = new Image();
+          img.onload = function () {
+            drawCtx.clearRect(0, 0, rect.width, rect.height);
+            drawCtx.drawImage(img, 0, 0, rect.width, rect.height);
+          };
+          img.src = saved;
+        }
+      }
+
+      function saveDayDrawing() {
+        if (!drawCanvas) return;
+        if (!isObj(state.drawingsByDate)) state.drawingsByDate = {};
+        let dataUrl = "";
+        try {
+          dataUrl = drawCanvas.toDataURL("image/webp", 0.65);
+          if (!dataUrl.startsWith("data:image/webp")) {
+            dataUrl = drawCanvas.toDataURL("image/png");
+          }
+        } catch (err) {
+          dataUrl = drawCanvas.toDataURL("image/png");
+        }
+        state.drawingsByDate[selectedDate] = dataUrl;
+        saveState();
+        const badge = document.getElementById("noteSavedBadge");
+        badge.classList.add("visible");
+        clearTimeout(noteSavedTimer);
+        noteSavedTimer = setTimeout(function () { badge.classList.remove("visible"); }, 1500);
+      }
+
+      function setNoteMode(mode) {
+        noteMode = mode;
+        document.getElementById("noteModeTextBtn").classList.toggle("active", mode === "text");
+        document.getElementById("noteModeDrawBtn").classList.toggle("active", mode === "draw");
+        document.getElementById("dayNoteInput").classList.toggle("hidden", mode !== "text");
+        document.getElementById("dayDrawSection").classList.toggle("hidden", mode !== "draw");
+        if (mode === "draw") setTimeout(loadDayDrawing, 20);
+      }
+
+      document.getElementById("noteModeTextBtn").onclick = function () { setNoteMode("text"); };
+      document.getElementById("noteModeDrawBtn").onclick = function () { setNoteMode("draw"); };
+
+      document.querySelectorAll(".draw-color-btn").forEach(function (btn) {
+        btn.onclick = function () {
+          drawColor = btn.dataset.drawColor;
+          drawEraser = false;
+          document.getElementById("drawEraserBtn").classList.remove("active");
+          document.querySelectorAll(".draw-color-btn").forEach(function (b) {
+            b.classList.toggle("active", b === btn);
+          });
+        };
+      });
+
+      document.querySelectorAll("[data-draw-size]").forEach(function (btn) {
+        btn.onclick = function () {
+          drawSize = Number(btn.dataset.drawSize) || 2.5;
+          document.querySelectorAll("[data-draw-size]").forEach(function (b) {
+            b.classList.toggle("active", b === btn);
+          });
+        };
+      });
+
+      document.getElementById("drawEraserBtn").onclick = function () {
+        drawEraser = !drawEraser;
+        this.classList.toggle("active", drawEraser);
+      };
+
+      document.getElementById("drawPalmBtn").onclick = function () {
+        drawPalmReject = !drawPalmReject;
+        this.classList.toggle("active", drawPalmReject);
+        showToast(drawPalmReject ? "Rejet de paume activé (stylet uniquement)." : "Stylet, doigt et souris activés.");
+      };
+
+      document.getElementById("drawPaperBtn").onclick = function () {
+        drawPaperIdx = (drawPaperIdx + 1) % drawPapers.length;
+        drawWrap.classList.remove("paper-lined", "paper-dotted");
+        if (drawPapers[drawPaperIdx].cls) {
+          drawWrap.classList.add(drawPapers[drawPaperIdx].cls);
+        }
+        this.textContent = drawPapers[drawPaperIdx].label;
+      };
+
+      document.getElementById("drawUndoBtn").onclick = function () {
+        if (!drawCanvas || !drawCtx || !drawWrap || drawHistory.length === 0) return;
+        const prev = drawHistory.pop();
+        const rect = drawWrap.getBoundingClientRect();
+        const img = new Image();
+        img.onload = function () {
+          drawCtx.clearRect(0, 0, rect.width, rect.height);
+          drawCtx.drawImage(img, 0, 0, rect.width, rect.height);
+          saveDayDrawing();
+        };
+        img.src = prev;
+      };
+
+      document.getElementById("drawClearBtn").onclick = function () {
+        if (!drawCanvas || !drawCtx || !drawWrap) return;
+        askConfirm("Effacer le dessin de cette journée ?", function () {
+          const rect = drawWrap.getBoundingClientRect();
+          drawHistory.push(drawCanvas.toDataURL("image/png"));
+          drawCtx.clearRect(0, 0, rect.width, rect.height);
+          if (isObj(state.drawingsByDate)) delete state.drawingsByDate[selectedDate];
+          saveState();
+          showToast("Dessin effacé.");
+        });
+      };
+
+      if (drawCanvas && drawCtx) {
+        function getCanvasPos(e) {
+          const rect = drawCanvas.getBoundingClientRect();
+          return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        }
+
+        drawCanvas.addEventListener("pointerdown", function (e) {
+          if (drawPalmReject && e.pointerType === "touch") return;
+          if (e.button !== undefined && e.button !== 0 && e.pointerType === "mouse") return;
+          e.preventDefault();
+          drawCanvas.setPointerCapture(e.pointerId);
+          isDrawing = true;
+          activePointerId = e.pointerId;
+          lastDrawPt = getCanvasPos(e);
+
+          drawHistory.push(drawCanvas.toDataURL("image/png"));
+          if (drawHistory.length > 15) drawHistory.shift();
+
+          const pressure = e.pointerType === "pen" && e.pressure > 0 ? (0.5 + e.pressure) : 1;
+          drawCtx.globalCompositeOperation = drawEraser ? "destination-out" : "source-over";
+          drawCtx.strokeStyle = drawColor;
+          drawCtx.fillStyle = drawColor;
+          drawCtx.lineWidth = (drawEraser ? drawSize * 3.5 : drawSize) * pressure;
+          drawCtx.beginPath();
+          drawCtx.arc(lastDrawPt.x, lastDrawPt.y, drawCtx.lineWidth / 2, 0, Math.PI * 2);
+          drawCtx.fill();
+        });
+
+        drawCanvas.addEventListener("pointermove", function (e) {
+          if (!isDrawing || e.pointerId !== activePointerId) return;
+          e.preventDefault();
+          const pt = getCanvasPos(e);
+          const pressure = e.pointerType === "pen" && e.pressure > 0 ? (0.5 + e.pressure) : 1;
+          drawCtx.globalCompositeOperation = drawEraser ? "destination-out" : "source-over";
+          drawCtx.strokeStyle = drawColor;
+          drawCtx.lineWidth = (drawEraser ? drawSize * 3.5 : drawSize) * pressure;
+          drawCtx.beginPath();
+          drawCtx.moveTo(lastDrawPt.x, lastDrawPt.y);
+          drawCtx.lineTo(pt.x, pt.y);
+          drawCtx.stroke();
+          lastDrawPt = pt;
+        });
+
+        function endStroke(e) {
+          if (!isDrawing || e.pointerId !== activePointerId) return;
+          isDrawing = false;
+          activePointerId = null;
+          lastDrawPt = null;
+          drawCtx.globalCompositeOperation = "source-over";
+          saveDayDrawing();
+        }
+
+        drawCanvas.addEventListener("pointerup", endStroke);
+        drawCanvas.addEventListener("pointercancel", endStroke);
+      }
+
+      /* =========================================================
+         18. CONNEXION FIREBASE, SYNCHRO CLOUD & PWA (v39)
+         ========================================================= */
+      const firebaseConfig = {
+        apiKey: "AIzaSyBIomOhteVLaoqje2A5ekBH5i1WImQ2bOI",
+        authDomain: "agenda-ziigiarts.firebaseapp.com",
+        projectId: "agenda-ziigiarts",
+        storageBucket: "agenda-ziigiarts.firebasestorage.app",
+        messagingSenderId: "935788826845",
+        appId: "1:935788826845:web:4a1ad9100278d4ea8c0b34",
+        measurementId: "G-GEHRP1STQD"
+      };
+
+      let fbAuth = null;
+      let fbDb = null;
+      let currentUser = null;
+      let unsubscribeSnapshot = null;
+      let cloudSaveTimer = null;
+      let isApplyingCloudUpdate = false;
+      const clientSessionId = uid("dev");
+
+      function updateCloudUi(statusText, isConnected) {
+        const pill = document.getElementById("cloudStatusPill");
+        const navBtn = document.getElementById("navCloudBtn");
+        const loggedOutView = document.getElementById("cloudLoggedOutView");
+        const loggedInView = document.getElementById("cloudLoggedInView");
+        const emailEl = document.getElementById("cloudUserEmail");
+        const detailEl = document.getElementById("cloudSyncDetail");
+
+        if (pill) {
+          pill.textContent = statusText;
+          pill.classList.toggle("is-connected", Boolean(isConnected));
+        }
+        if (navBtn) {
+          navBtn.textContent = isConnected ? "🟢" : "☁️";
+        }
+        if (currentUser) {
+          loggedOutView.classList.add("hidden");
+          loggedInView.classList.remove("hidden");
+          emailEl.textContent = currentUser.email || currentUser.displayName || "Compte connecté";
+          if (detailEl) detailEl.textContent = statusText;
+        } else {
+          loggedOutView.classList.remove("hidden");
+          loggedInView.classList.add("hidden");
+        }
+        updateBackupReminder();
+      }
+
+      function setCloudError(msg) {
+        const el = document.getElementById("cloudAuthError");
+        if (el) el.textContent = msg || "";
+      }
+
+      function pushStateToCloud() {
+        if (!fbDb || !currentUser || isApplyingCloudUpdate) return;
+        updateCloudUi("⏳ Synchronisation...", true);
+        fbDb.collection("agendas").doc(currentUser.uid).set({
+          data: state,
+          updatedAt: Date.now(),
+          updatedBy: clientSessionId
+        }, { merge: true }).then(function () {
+          updateCloudUi("☁️ Synchronisé", true);
+        }).catch(function (err) {
+          console.warn("Erreur synchro Firestore :", err);
+          updateCloudUi("⚠️ Erreur synchro", true);
+        });
+      }
+
+      scheduleCloudSave = function () {
+        if (!fbDb || !currentUser || isApplyingCloudUpdate) return;
+        clearTimeout(cloudSaveTimer);
+        updateCloudUi("⏳ Enregistrement...", true);
+        cloudSaveTimer = setTimeout(pushStateToCloud, 700);
+      };
+
+      function startCloudListener(user) {
+        if (unsubscribeSnapshot) {
+          unsubscribeSnapshot();
+          unsubscribeSnapshot = null;
+        }
+        if (!fbDb || !user) return;
+
+        const docRef = fbDb.collection("agendas").doc(user.uid);
+        unsubscribeSnapshot = docRef.onSnapshot(function (doc) {
+          if (doc.exists) {
+            const payload = doc.data();
+            if (payload && payload.updatedBy === clientSessionId) {
+              updateCloudUi("☁️ Synchronisé", true);
+              return;
+            }
+            if (payload && isObj(payload.data)) {
+              isApplyingCloudUpdate = true;
+              state = mergeWithDefaults(payload.data);
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+              } catch (err) {}
+              applyGentleMode();
+              initCollapsibleCards();
+              renderAll();
+              isApplyingCloudUpdate = false;
+              updateCloudUi("☁️ Synchronisé", true);
+            }
+          } else {
+            pushStateToCloud();
+          }
+        }, function (err) {
+          console.warn("Erreur lecture Firestore :", err);
+          updateCloudUi("⚠️ Hors ligne", true);
+        });
+      }
+
+      function initFirebaseCloud() {
+        if (typeof window.firebase === "undefined") {
+          updateCloudUi("☁️ Mode local", false);
+          return;
+        }
+        try {
+          if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+          }
+          fbAuth = firebase.auth();
+          fbDb = firebase.firestore();
+
+          fbAuth.onAuthStateChanged(function (user) {
+            currentUser = user;
+            if (user) {
+              updateCloudUi("☁️ Connexion...", true);
+              startCloudListener(user);
+            } else {
+              if (unsubscribeSnapshot) {
+                unsubscribeSnapshot();
+                unsubscribeSnapshot = null;
+              }
+              updateCloudUi("☁️ Hors ligne (local)", false);
+            }
+          });
+        } catch (err) {
+          console.warn("Initialisation Firebase impossible :", err);
+          updateCloudUi("☁️ Mode local", false);
+        }
+      }
+
+      function openCloudModal() {
+        setCloudError("");
+        document.getElementById("cloudModal").classList.remove("hidden");
+      }
+
+      function closeCloudModal() {
+        document.getElementById("cloudModal").classList.add("hidden");
+      }
+
+      document.getElementById("navCloudBtn").onclick = openCloudModal;
+      document.getElementById("cloudStatusPill").onclick = openCloudModal;
+      document.getElementById("closeCloudModalBtn").onclick = closeCloudModal;
+      document.getElementById("cloudModal").addEventListener("click", function (e) {
+        if (e.target === this) closeCloudModal();
+      });
+
+      document.getElementById("googleSignInBtn").onclick = function () {
+        if (!fbAuth) {
+          setCloudError("Service cloud indisponible hors ligne.");
+          return;
+        }
+        setCloudError("");
+        const provider = new firebase.auth.GoogleAuthProvider();
+        fbAuth.signInWithPopup(provider).then(function () {
+          closeCloudModal();
+          showToast("Connectée avec Google ☁️");
+        }).catch(function (err) {
+          if (err && (err.code === "auth/popup-blocked" || err.code === "auth/operation-not-supported-in-this-environment")) {
+            fbAuth.signInWithRedirect(provider);
+          } else {
+            setCloudError("Connexion Google impossible : " + (err.message || err.code));
+          }
+        });
+      };
+
+      document.getElementById("emailAuthForm").onsubmit = function (e) {
+        e.preventDefault();
+        if (!fbAuth) return;
+        const email = document.getElementById("authEmailInput").value.trim();
+        const pass = document.getElementById("authPasswordInput").value;
+        setCloudError("");
+        fbAuth.signInWithEmailAndPassword(email, pass).then(function () {
+          closeCloudModal();
+          showToast("Connectée à ton compte ☁️");
+        }).catch(function () {
+          setCloudError("Courriel ou mot de passe incorrect.");
+        });
+      };
+
+      document.getElementById("emailSignUpBtn").onclick = function () {
+        if (!fbAuth) return;
+        const email = document.getElementById("authEmailInput").value.trim();
+        const pass = document.getElementById("authPasswordInput").value;
+        if (!email || pass.length < 6) {
+          setCloudError("Entre un courriel valide et un mot de passe d'au moins 6 caractères.");
+          return;
+        }
+        setCloudError("");
+        fbAuth.createUserWithEmailAndPassword(email, pass).then(function () {
+          closeCloudModal();
+          showToast("Compte créé et synchronisé ☁️");
+        }).catch(function (err) {
+          if (err && err.code === "auth/email-already-in-use") {
+            setCloudError("Ce courriel a déjà un compte. Clique sur « Se connecter ».");
+          } else {
+            setCloudError("Impossible de créer le compte : " + (err.message || err.code));
+          }
+        });
+      };
+
+      document.getElementById("forgotPasswordBtn").onclick = function () {
+        if (!fbAuth) return;
+        const email = document.getElementById("authEmailInput").value.trim();
+        if (!email) {
+          setCloudError("Entre d'abord ton courriel ci-dessus pour recevoir le lien.");
+          return;
+        }
+        fbAuth.sendPasswordResetEmail(email).then(function () {
+          setCloudError("");
+          showToast("Courriel de réinitialisation envoyé !");
+        }).catch(function () {
+          setCloudError("Impossible d'envoyer le courriel à cette adresse.");
+        });
+      };
+
+      document.getElementById("cloudForceSyncBtn").onclick = function () {
+        pushStateToCloud();
+        showToast("Synchronisation lancée ☁️");
+      };
+
+      document.getElementById("cloudSignOutBtn").onclick = function () {
+        if (!fbAuth) return;
+        fbAuth.signOut().then(function () {
+          closeCloudModal();
+          showToast("Déconnectée (tes données restent en local).");
+        });
+      };
+
+      // Enregistrement PWA (Service Worker)
+      if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+        navigator.serviceWorker.register("./service-worker.js").catch(function () {});
+      }
+
+      initCollapsibleCards();
+      applyGentleMode();
+      updateBackupReminder();
+      initFirebaseCloud();
 
       // Lancement initial
       renderOwnerTitle();
