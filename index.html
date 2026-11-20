@@ -2415,7 +2415,7 @@
     <header class="top-card">
       <h1 id="appTitleDisplay" class="app-title">Mon agenda</h1>
       <nav class="main-nav" aria-label="Navigation principale">
-        <button id="navAgendaBtn" class="active" type="button">📅 Mon agenda</button>
+        <button id="navAgendaBtn" class="nav-icon-btn active" type="button" title="Mon agenda" aria-label="Mon agenda">📅</button>
         <button id="navCloudBtn" class="nav-icon-btn" type="button" title="Compte & Synchro Cloud" aria-label="Compte et Synchro Cloud">☁️</button>
         <button id="navSettingsBtn" class="nav-icon-btn" type="button" title="Paramètres" aria-label="Paramètres">⚙️</button>
         <button id="navFaqBtn" class="nav-icon-btn" type="button" title="Aide & FAQ" aria-label="Aide et FAQ">❓</button>
@@ -2423,7 +2423,7 @@
       </nav>
       <div class="row" style="justify-content:center;">
         <button id="cloudStatusPill" type="button" class="cloud-status-pill" title="Gérer mon compte cloud">☁️ Hors ligne (local)</button>
-        <button id="gentleModeToggleBtn" type="button" class="gentle-mode-btn" title="Masquer le superflu pour les journées plus difficiles">🌿 Mode jour doux</button>
+        <button id="gentleModeToggleBtn" type="button" class="gentle-mode-btn" title="Masquer le superflu pour les journées plus difficiles">🌿 Jour difficile</button>
       </div>
     </header>
 
@@ -2445,7 +2445,7 @@
         </div>
       </div>
       <div class="gentle-mode-banner">
-        🌿 Mode jour doux activé — Seul l'essentiel est affiché (Horaire, Prendre soin de moi et Bloc-notes).
+        🌿 Mode Jour difficile activé — Seul l'essentiel est affiché (Horaire, Prendre soin de moi et Bloc-notes).
       </div>
       <!-- CARTE 3 : DATE & SÉLECTEUR 4 VUES CENTRÉ -->
       <section class="top-card" aria-label="Navigation dans le temps">
@@ -3123,6 +3123,17 @@
           <summary>🎨 Comment personnaliser mon agenda ?</summary>
           <div class="faq-answer">
             <p>Dans <strong>⚙️ Paramètres</strong>, tu peux changer ton prénom ou surnom, basculer entre les <strong>6 thèmes visuels</strong>, modifier tes catégories d'horaire, créer tes propres pastilles (état, sommeil, gestes de soin) et ajouter tes phrases bienveillantes préférées.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>🌿 À quoi sert le bouton « Jour difficile » ?</summary>
+          <div class="faq-answer">
+            <p>Les journées où l'énergie manque ou où la page semble trop chargée, touche le bouton <strong>🌿 Jour difficile</strong> en haut de l'agenda.</p>
+            <ul>
+              <li>Il masque temporairement les sections secondaires (<em>À faire aujourd'hui</em>, <em>Vide ton sac</em> et <em>Mes routines de vie</em>) pour ne garder que l'essentiel : ton <strong>Horaire</strong>, <strong>Prendre soin de moi</strong> et ton <strong>Bloc-notes libre</strong>.</li>
+              <li>Rien n'est supprimé : tes tâches, notes et routines restent intactes. Touche de nouveau <strong>🌿 Jour difficile : Actif</strong> pour retrouver l'affichage complet quand tu es prête.</li>
+            </ul>
           </div>
         </details>
       </div>
@@ -5968,7 +5979,7 @@
         const btn = document.getElementById("gentleModeToggleBtn");
         if (btn) {
           btn.classList.toggle("active", active);
-          btn.textContent = active ? "🌿 Mode jour doux : Actif" : "🌿 Mode jour doux";
+          btn.textContent = active ? "🌿 Jour difficile : Actif" : "🌿 Jour difficile";
         }
       }
 
@@ -5976,7 +5987,7 @@
         state.gentleMode = !state.gentleMode;
         saveState();
         applyGentleMode();
-        showToast(state.gentleMode ? "Mode jour doux activé 🌿" : "Affichage complet rétabli.");
+        showToast(state.gentleMode ? "Mode Jour difficile activé 🌿" : "Affichage complet rétabli.");
       };
 
       const defaultViewSelectEl = document.getElementById("defaultViewSelect");

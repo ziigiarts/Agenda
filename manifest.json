@@ -1,7 +1,7 @@
 {
   "name": "Mon agenda",
   "short_name": "Mon agenda",
-  "description": "Agenda personnel bienveillant avec suivi humeur, sommeil, hydratation, mode crayon, mode jour doux et synchronisation cloud.",
+  "description": "Agenda personnel bienveillant avec suivi humeur, sommeil, hydratation, mode crayon, mode jour difficile et synchronisation cloud.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#FFFFFF",
