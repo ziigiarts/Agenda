@@ -2444,6 +2444,13 @@
           <button id="bannerDismissBtn" type="button" class="sm ghost" aria-label="Fermer">✕</button>
         </div>
       </div>
+      <div id="demoDataBanner" class="backup-reminder-banner hidden" role="status">
+        <span>✨ Des exemples de démo sont affichés pour te montrer l'agenda.</span>
+        <div class="row">
+          <button id="bannerClearDemoBtn" type="button" class="sm primary">🧹 Effacer la démo</button>
+          <button id="bannerDismissDemoBtn" type="button" class="sm ghost" aria-label="Fermer">✕</button>
+        </div>
+      </div>
       <div class="gentle-mode-banner">
         🌿 Mode Jour difficile activé — Seul l'essentiel est affiché (Horaire, Prendre soin de moi et Bloc-notes).
       </div>
@@ -2808,6 +2815,7 @@
             <button id="importJsonBtn" class="sm btn-soft" type="button">⬆️ Importer JSON</button>
             <button id="importIcsBtn" class="sm btn-soft" type="button">📅 Importer Google Agenda (.ics)</button>
             <button id="clearIcsBtn" class="sm danger-outline" type="button">🧹 Retirer les événements Google importés</button>
+            <button id="clearDemoBtn" class="sm danger-outline" type="button">🧹 Effacer les données de démo</button>
             <button id="resetDataBtn" class="sm danger-outline" type="button">🔄 Réinitialiser les données de démo</button>
             <input id="importJsonInput" type="file" accept="application/json,.json" class="hidden" />
             <input id="importIcsInput" type="file" accept=".ics,text/calendar" class="hidden" />
@@ -3545,6 +3553,7 @@
         s.routineChecksByDate[today] = { rout_1: true };
 
         s.wellnessByDate[twoDaysAgo] = {
+          isDemo: true,
           moodId: "mood_2",
           moodSnapshot: { id: "mood_2", emoji: "☁️", label: "Calme / Neutre", level: 2 },
           sleepId: "sleep_2",
@@ -3556,6 +3565,7 @@
         };
 
         s.wellnessByDate[yesterday] = {
+          isDemo: true,
           moodId: "mood_3",
           moodSnapshot: { id: "mood_3", emoji: "🌤️", label: "Sereine / Bien", level: 3 },
           sleepId: "sleep_3",
@@ -3567,6 +3577,7 @@
         };
 
         s.wellnessByDate[today] = {
+          isDemo: true,
           moodId: "mood_4",
           moodSnapshot: { id: "mood_4", emoji: "☀️", label: "Pleine d'élan", level: 4 },
           sleepId: "sleep_3",
@@ -3595,7 +3606,8 @@
             mealsCount: clampRange(entry.mealsCount || 0, 0, 3),
             snack: Boolean(entry.snack),
             waterGlasses: clampRange(entry.waterGlasses || 0, 0, 8),
-            careIds: Array.isArray(entry.careIds) ? entry.careIds : []
+            careIds: Array.isArray(entry.careIds) ? entry.careIds : [],
+            isDemo: Boolean(entry.isDemo)
           };
         });
         return result;
@@ -4136,6 +4148,7 @@
             careIds: []
           };
         }
+        delete state.wellnessByDate[dateStr].isDemo;
         return state.wellnessByDate[dateStr];
       }
 
@@ -5376,14 +5389,146 @@
         e.target.value = "";
       };
 
+      let demoBannerDismissed = false;
+
+      function isDemoWellnessEntry(entry) {
+        if (!isObj(entry)) return false;
+        if (entry.isDemo) return true;
+        const cares = Array.isArray(entry.careIds) ? entry.careIds.join(",") : "";
+        return (
+          (entry.moodId === "mood_2" && entry.sleepId === "sleep_2" && entry.mealsCount === 2 && entry.snack === true && entry.waterGlasses === 4 && cares === "care_4") ||
+          (entry.moodId === "mood_3" && entry.sleepId === "sleep_3" && entry.mealsCount === 3 && entry.snack === false && entry.waterGlasses === 6 && cares === "care_1,care_4,care_5") ||
+          (entry.moodId === "mood_4" && entry.sleepId === "sleep_3" && entry.mealsCount === 3 && entry.snack === true && entry.waterGlasses === 5 && cares === "care_2,care_4")
+        );
+      }
+
+      function hasDemoData() {
+        const hasDemoMoments = Array.isArray(state.moments) && state.moments.some(function (m) {
+          return m && typeof m.id === "string" && m.id.startsWith("demo_");
+        });
+        if (hasDemoMoments) return true;
+
+        if (isObj(state.tasksByDate)) {
+          for (const d of Object.keys(state.tasksByDate)) {
+            const list = state.tasksByDate[d];
+            if (Array.isArray(list) && list.some(function (t) { return t && typeof t.id === "string" && t.id.startsWith("demo_"); })) {
+              return true;
+            }
+          }
+        }
+
+        const hasDemoDump = Array.isArray(state.dumpItems) && state.dumpItems.some(function (item) {
+          return item && typeof item.id === "string" && item.id.startsWith("demo_");
+        });
+        if (hasDemoDump) return true;
+
+        if (isObj(state.wellnessByDate)) {
+          for (const d of Object.keys(state.wellnessByDate)) {
+            if (isDemoWellnessEntry(state.wellnessByDate[d])) return true;
+          }
+        }
+        return false;
+      }
+
+      function updateDemoBanner() {
+        const banner = document.getElementById("demoDataBanner");
+        if (!banner) return;
+        if (!demoBannerDismissed && hasDemoData()) {
+          banner.classList.remove("hidden");
+        } else {
+          banner.classList.add("hidden");
+        }
+      }
+
+      function promptClearDemoData() {
+        if (!hasDemoData()) {
+          showToast("Aucune donnée de démo à effacer.");
+          return;
+        }
+        askConfirm(
+          "Effacer uniquement les exemples de démo ? Tes propres événements, tâches, notes, thème et réglages seront conservés.",
+          function () {
+            const demoDates = new Set();
+
+            if (Array.isArray(state.moments)) {
+              state.moments = state.moments.filter(function (m) {
+                if (m && typeof m.id === "string" && m.id.startsWith("demo_")) {
+                  if (m.date) demoDates.add(m.date);
+                  return false;
+                }
+                return true;
+              });
+            }
+
+            if (isObj(state.tasksByDate)) {
+              Object.keys(state.tasksByDate).forEach(function (d) {
+                const list = state.tasksByDate[d];
+                if (!Array.isArray(list)) return;
+                const hadDemo = list.some(function (t) { return t && typeof t.id === "string" && t.id.startsWith("demo_"); });
+                if (hadDemo) {
+                  demoDates.add(d);
+                  const remaining = list.filter(function (t) { return !(t && typeof t.id === "string" && t.id.startsWith("demo_")); });
+                  if (remaining.length > 0) {
+                    state.tasksByDate[d] = remaining;
+                  } else {
+                    delete state.tasksByDate[d];
+                  }
+                }
+              });
+            }
+
+            if (Array.isArray(state.dumpItems)) {
+              state.dumpItems = state.dumpItems.filter(function (item) {
+                return !(item && typeof item.id === "string" && item.id.startsWith("demo_"));
+              });
+            }
+
+            if (isObj(state.wellnessByDate)) {
+              Object.keys(state.wellnessByDate).forEach(function (d) {
+                if (isDemoWellnessEntry(state.wellnessByDate[d])) {
+                  demoDates.add(d);
+                  delete state.wellnessByDate[d];
+                }
+              });
+            }
+
+            if (isObj(state.routineChecksByDate)) {
+              demoDates.forEach(function (d) {
+                const rc = state.routineChecksByDate[d];
+                if (isObj(rc)) {
+                  const keys = Object.keys(rc).filter(function (k) { return rc[k]; });
+                  if (keys.length === 1 && keys[0] === "rout_1") {
+                    delete state.routineChecksByDate[d];
+                  }
+                }
+              });
+            }
+
+            saveState();
+            renderAll();
+            updateDemoBanner();
+            showToast("Données de démo effacées ✨");
+          }
+        );
+      }
+
+      document.getElementById("clearDemoBtn").onclick = promptClearDemoData;
+      document.getElementById("bannerClearDemoBtn").onclick = promptClearDemoData;
+      document.getElementById("bannerDismissDemoBtn").onclick = function () {
+        demoBannerDismissed = true;
+        document.getElementById("demoDataBanner").classList.add("hidden");
+      };
+
       document.getElementById("resetDataBtn").onclick = function () {
         askConfirm("Réinitialiser avec les données de démo ?", function () {
           try { localStorage.removeItem(STORAGE_KEY); } catch (err) {}
           state = createDemoState();
+          demoBannerDismissed = false;
           saveState();
           manualQuoteIndex = null;
           selectedDate = toDateStr(new Date());
           renderAll();
+          updateDemoBanner();
           showToast("Données de démo réinitialisées.");
         });
       };
@@ -6358,6 +6503,7 @@
               applyGentleMode();
               initCollapsibleCards();
               renderAll();
+              updateDemoBanner();
               isApplyingCloudUpdate = false;
               updateCloudUi("☁️ Synchronisé", true);
             }
@@ -6507,6 +6653,7 @@
       initCollapsibleCards();
       applyGentleMode();
       updateBackupReminder();
+      updateDemoBanner();
       initFirebaseCloud();
 
       // Lancement initial
