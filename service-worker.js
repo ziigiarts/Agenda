@@ -1,7 +1,9 @@
-const CACHE_NAME = "mon-agenda-pwa-v45";
+const CACHE_NAME = "mon-agenda-pwa-v56";
 const ASSETS = [
   "./",
   "./index.html",
+  "./styles.css",
+  "./app.js",
   "./manifest.json",
   "./icon.svg",
   "./icon-192.png",
@@ -40,6 +42,6 @@ self.addEventListener("fetch", (event) => {
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         return res;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => caches.match(event.request, { ignoreSearch: true }))
   );
 });
