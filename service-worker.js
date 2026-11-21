@@ -1,4 +1,4 @@
-const CACHE_NAME = "mon-agenda-pwa-v44";
+const CACHE_NAME = "mon-agenda-pwa-v45";
 const ASSETS = [
   "./",
   "./index.html",
@@ -7,7 +7,9 @@ const ASSETS = [
   "./icon-192.png",
   "./icon-512.png",
   "./icon-maskable-512.png",
-  "./apple-touch-icon.png"
+  "./apple-touch-icon.png",
+  "./Patternbleuet.jpg",
+  "./PatternFraise.jpg"
 ];
 
 self.addEventListener("install", (event) => {
