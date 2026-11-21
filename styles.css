@@ -2544,7 +2544,3 @@ input[type="checkbox"]:focus-visible {
   accent-color: var(--accent);
   flex: 0 0 auto;
 }
-
-#remindersOptions .row {
-  margin-top: 0.75rem;
-}

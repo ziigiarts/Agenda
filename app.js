@@ -4254,14 +4254,6 @@ document.addEventListener("DOMContentLoaded", function () {
     saveReminderSettings(s);
     showToast("Heure enregistrée.");
   };
-  document.getElementById("reminderTestBtn").onclick = function () {
-    if (!notificationsSupported() || Notification.permission !== "granted") {
-      showToast("Active d'abord les rappels.");
-      return;
-    }
-    showSoftNotification("🔔 Test", "Voilà à quoi ressembleront tes rappels doux 🌸", "test");
-    showToast("Notification envoyée.");
-  };
 
   setInterval(checkReminders, 30000);
   document.addEventListener("visibilitychange", function () {
