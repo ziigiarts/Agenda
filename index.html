@@ -271,6 +271,7 @@
             <div class="row">
               <button id="recap7Btn" class="sm primary" type="button">7 jours</button>
               <button id="recap30Btn" class="sm" type="button">30 jours</button>
+              <button id="recapExportBtn" class="sm btn-soft" type="button" title="Exporter le récap en image">📤 Exporter</button>
             </div>
           </div>
 
@@ -453,6 +454,46 @@
               <option value="month">Vue Mois (calendrier complet)</option>
             </select>
           </div>
+        </article>
+
+        <!-- Rappels doux (notifications) -->
+        <article class="card" id="remindersCard">
+          <h2 class="card-title">🔔 Rappels doux</h2>
+          <p class="muted">De petites notifications, sans pression. Tu peux les activer ou les couper à tout moment.</p>
+          <div class="sub-block">
+            <label class="check-row" for="remindersEnabledCheck">
+              <input type="checkbox" id="remindersEnabledCheck" />
+              <span>Activer les rappels sur cet appareil</span>
+            </label>
+            <p id="remindersStatus" class="muted"></p>
+          </div>
+          <div id="remindersOptions" class="hidden">
+            <hr class="soft-divider" />
+            <div class="sub-block">
+              <label class="sub-label" for="reminderLeadSelect">Me prévenir avant un moment de l'horaire</label>
+              <select id="reminderLeadSelect">
+                <option value="0">À l'heure</option>
+                <option value="5">5 minutes avant</option>
+                <option value="10">10 minutes avant</option>
+                <option value="30">30 minutes avant</option>
+                <option value="60">1 heure avant</option>
+              </select>
+            </div>
+            <hr class="soft-divider" />
+            <div class="sub-block">
+              <label class="check-row" for="reminderDailyCheck">
+                <input type="checkbox" id="reminderDailyCheck" />
+                <span>Petit rappel « Prendre soin de moi » chaque jour</span>
+              </label>
+              <label class="sub-label" for="reminderDailyTime">Heure du rappel quotidien</label>
+              <input id="reminderDailyTime" type="time" />
+              <p class="muted">Il ne s'affiche pas si tu as déjà noté quelque chose dans ta journée.</p>
+            </div>
+            <div class="row">
+              <button id="reminderTestBtn" class="sm btn-soft" type="button">🔔 Tester une notification</button>
+            </div>
+          </div>
+          <p class="muted">Bon à savoir : sans serveur, les rappels s'affichent quand l'app est ouverte ou récemment utilisée. Si tu la fermes complètement, ils n'arrivent pas.</p>
         </article>
 
         <!-- Sauvegarde & Données -->

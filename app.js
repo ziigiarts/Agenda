@@ -1408,6 +1408,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
+    lastRecapData = { points: points, startStr: startStr, endStr: endStr, days: recapDays, stats: null, insights: [] };
+
     const daysWithData = points.filter(function (p) {
       return Boolean(p.mood || p.sleep || p.waterGlasses > 0 || p.mealsCount > 0);
     }).length;
@@ -1431,6 +1433,277 @@ document.addEventListener("DOMContentLoaded", function () {
     renderRecapStatsTableAndInsights(points);
     renderRecapMonth();
   }
+
+  /* ---------- Export du récap en image (look doux et propre) ---------- */
+  let lastRecapData = null;
+
+  function wrapLines(ctx, text, maxWidth) {
+    const words = String(text).split(" ");
+    const lines = [];
+    let line = "";
+    words.forEach(function (w) {
+      const test = line ? line + " " + w : w;
+      if (ctx.measureText(test).width > maxWidth && line) {
+        lines.push(line);
+        line = w;
+      } else {
+        line = test;
+      }
+    });
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  function roundRectPath(ctx, x, y, w, h, r) {
+    const rr = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.lineTo(x + w - rr, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + rr);
+    ctx.lineTo(x + w, y + h - rr);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - rr, y + h);
+    ctx.lineTo(x + rr, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - rr);
+    ctx.lineTo(x, y + rr);
+    ctx.quadraticCurveTo(x, y, x + rr, y);
+    ctx.closePath();
+  }
+
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    showToast("Image du récap enregistrée 📤");
+  }
+
+  async function exportRecapImage() {
+    const data = lastRecapData;
+    if (!data || !data.stats) { showToast("Ouvre d'abord l'onglet Récap."); return; }
+    const hasData = data.points.some(function (p) { return p.mood || p.sleep || p.waterGlasses > 0 || p.mealsCount > 0; });
+    if (!hasData) { showToast("Rien à exporter pour l'instant : note quelques journées d'abord 🌱"); return; }
+    try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch (err) {}
+
+    const W = 1080, PAD = 56, CW = W - PAD * 2;
+    const FONT = '"Quicksand","Nunito",-apple-system,BlinkMacSystemFont,sans-serif';
+    const C = {
+      bg: "#FBF6F4", card: "#FFFFFF", text: "#3A2F36", muted: "#8A7C84", grid: "#EFE6E3",
+      mood: "#E27BA0", sleep: "#8D89DE", water: "#BFE3EE",
+      tMood: "#FDE9F0", tSleep: "#ECEBFB", tWater: "#E3F4F9", tMeal: "#FFF1DC"
+    };
+
+    const measure = document.createElement("canvas").getContext("2d");
+    measure.font = "600 27px " + FONT;
+    const ins = data.insights.slice(0, 6).map(function (it) {
+      return { icon: it.icon, lines: wrapLines(measure, it.text, CW - 150) };
+    });
+
+    const headerH = 170;
+    const tilesH = 130 * 2 + 24;
+    const chartH = 470;
+    let insH = 110;
+    ins.forEach(function (it) { insH += Math.max(72, it.lines.length * 38 + 30) + 14; });
+    const footerH = 90;
+    const H = PAD + headerH + tilesH + 32 + chartH + 32 + insH + footerH;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = C.bg;
+    ctx.fillRect(0, 0, W, H);
+
+    function card(x, y, w, h) {
+      ctx.save();
+      ctx.shadowColor = "rgba(120, 90, 100, 0.14)";
+      ctx.shadowBlur = 28;
+      ctx.shadowOffsetY = 8;
+      ctx.fillStyle = C.card;
+      roundRectPath(ctx, x, y, w, h, 32);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // En-tête
+    let y = PAD;
+    ctx.textBaseline = "alphabetic";
+    ctx.fillStyle = C.text;
+    ctx.font = "700 56px " + FONT;
+    ctx.fillText("Mon récap bienveillant", PAD, y + 62);
+    ctx.fillStyle = C.muted;
+    ctx.font = "600 30px " + FONT;
+    ctx.fillText("Du " + formatDateShort(data.startStr) + " au " + formatDateShort(data.endStr) + " (" + data.days + " jours)", PAD, y + 112);
+    y += headerH;
+
+    // Tuiles de moyennes
+    const tiles = [
+      { label: "État général moyen", value: data.stats.mood, bg: C.tMood },
+      { label: "Sommeil moyen", value: data.stats.sleep, bg: C.tSleep },
+      { label: "Verres d'eau moyens", value: "💧 " + data.stats.water, bg: C.tWater },
+      { label: "Repas moyens", value: "🍽️ " + data.stats.meals, bg: C.tMeal }
+    ];
+    const tw = (CW - 24) / 2;
+    tiles.forEach(function (t, i) {
+      const tx = PAD + (i % 2) * (tw + 24);
+      const ty = y + Math.floor(i / 2) * (130 + 24);
+      ctx.fillStyle = t.bg;
+      roundRectPath(ctx, tx, ty, tw, 130, 28);
+      ctx.fill();
+      ctx.fillStyle = C.muted;
+      ctx.font = "600 25px " + FONT;
+      ctx.fillText(t.label, tx + 32, ty + 48);
+      ctx.fillStyle = C.text;
+      ctx.font = "700 44px " + FONT;
+      ctx.fillText(t.value, tx + 32, ty + 100);
+    });
+    y += tilesH + 32;
+
+    // Graphique
+    card(PAD, y, CW, chartH);
+    ctx.fillStyle = C.text;
+    ctx.font = "700 32px " + FONT;
+    ctx.fillText("Évolution sur la période", PAD + 36, y + 30 + 28);
+
+    const legend = [
+      { color: C.mood, text: "État général (/4)" },
+      { color: C.sleep, text: "Sommeil (/4)" },
+      { color: C.water, text: "Verres d'eau" }
+    ];
+    let lx = PAD + 36;
+    ctx.font = "600 23px " + FONT;
+    legend.forEach(function (l) {
+      ctx.fillStyle = l.color;
+      ctx.beginPath();
+      ctx.arc(lx + 9, y + 100, 9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = C.muted;
+      ctx.fillText(l.text, lx + 28, y + 108);
+      lx += 28 + ctx.measureText(l.text).width + 34;
+    });
+
+    const px0 = PAD + 90, px1 = PAD + CW - 50;
+    const py0 = y + 150, py1 = y + chartH - 80;
+    const n = data.points.length;
+    const xAt = function (i) { return n === 1 ? (px0 + px1) / 2 : px0 + (px1 - px0) * (i / (n - 1)); };
+    const yAt = function (v) { return py1 - (v / 4) * (py1 - py0); };
+
+    ctx.lineWidth = 2;
+    ctx.font = "600 21px " + FONT;
+    for (let g = 0; g <= 4; g++) {
+      ctx.strokeStyle = C.grid;
+      ctx.beginPath();
+      ctx.moveTo(px0 - 10, yAt(g));
+      ctx.lineTo(px1 + 10, yAt(g));
+      ctx.stroke();
+      ctx.fillStyle = C.muted;
+      ctx.textAlign = "right";
+      ctx.fillText(String(g), px0 - 24, yAt(g) + 7);
+    }
+    ctx.textAlign = "left";
+
+    // barres d'eau (8 verres = niveau 4)
+    const barW = Math.max(8, Math.min(30, ((px1 - px0) / Math.max(n, 1)) * 0.55));
+    data.points.forEach(function (p, i) {
+      if (!(p.waterGlasses > 0)) return;
+      const top = yAt(p.waterGlasses / 2);
+      ctx.fillStyle = C.water;
+      roundRectPath(ctx, xAt(i) - barW / 2, top, barW, py1 - top, Math.min(10, barW / 2));
+      ctx.fill();
+    });
+
+    // courbes
+    function drawSeries(key, color) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 5;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      let open = false;
+      ctx.beginPath();
+      data.points.forEach(function (p, i) {
+        if (!p[key]) { open = false; return; }
+        const px = xAt(i), py = yAt(p[key].level);
+        if (open) ctx.lineTo(px, py); else ctx.moveTo(px, py);
+        open = true;
+      });
+      ctx.stroke();
+      data.points.forEach(function (p, i) {
+        if (!p[key]) return;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(xAt(i), yAt(p[key].level), 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#FFFFFF";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      });
+    }
+    drawSeries("sleep", C.sleep);
+    drawSeries("mood", C.mood);
+
+    // étiquettes des jours
+    const step = n > 10 ? 5 : 1;
+    ctx.fillStyle = C.muted;
+    ctx.font = "600 21px " + FONT;
+    ctx.textAlign = "center";
+    data.points.forEach(function (p, i) {
+      if (i % step === 0 || (i === n - 1 && (n - 1) % step >= 3)) {
+        ctx.fillText(String(parseDateStr(p.date).getDate()), xAt(i), py1 + 40);
+      }
+    });
+    ctx.textAlign = "left";
+    y += chartH + 32;
+
+    // Observations
+    card(PAD, y, CW, insH);
+    ctx.fillStyle = C.text;
+    ctx.font = "700 32px " + FONT;
+    ctx.fillText("Petites observations", PAD + 36, y + 62);
+    let iy = y + 96;
+    ins.forEach(function (it) {
+      const h = Math.max(72, it.lines.length * 38 + 30);
+      ctx.fillStyle = "#FAF3F1";
+      roundRectPath(ctx, PAD + 28, iy, CW - 56, h, 22);
+      ctx.fill();
+      ctx.fillStyle = C.text;
+      ctx.font = "30px " + FONT;
+      ctx.fillText(it.icon, PAD + 52, iy + 46);
+      ctx.font = "600 27px " + FONT;
+      it.lines.forEach(function (line, k) {
+        ctx.fillText(line, PAD + 112, iy + 44 + k * 38);
+      });
+      iy += h + 14;
+    });
+    y += insH;
+
+    // Pied de page
+    ctx.fillStyle = C.muted;
+    ctx.font = "600 22px " + FONT;
+    ctx.textAlign = "center";
+    ctx.fillText("Récap généré avec Mon agenda · " + formatDateShort(toDateStr(new Date())), W / 2, y + 56);
+    ctx.textAlign = "left";
+
+    const filename = "recap-agenda-" + data.startStr + "_" + data.endStr + ".png";
+    canvas.toBlob(function (blob) {
+      if (!blob) { showToast("Impossible de créer l'image."); return; }
+      try {
+        const file = new File([blob], filename, { type: "image/png" });
+        if (navigator.canShare && navigator.share && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file], title: "Mon récap bienveillant" }).catch(function (err) {
+            if (!err || err.name !== "AbortError") downloadBlob(blob, filename);
+          });
+          return;
+        }
+      } catch (err) {}
+      downloadBlob(blob, filename);
+    }, "image/png");
+  }
+
+  document.getElementById("recapExportBtn").onclick = exportRecapImage;
 
   /* ---------- Le mois en un coup d'œil ---------- */
   let recapMonthOffset = 0;         // 0 = mois de la date sélectionnée
@@ -1898,6 +2171,11 @@ document.addEventListener("DOMContentLoaded", function () {
       buildTrendInsights(points).forEach(function (t) { insights.push(t); });
     }
 
+    if (lastRecapData) {
+      lastRecapData.stats = { mood: avgMood, sleep: avgSleep, water: avgWater, meals: avgMeals };
+      lastRecapData.insights = insights.map(function (i) { return { icon: i.icon, text: i.text }; });
+    }
+
     insights.forEach(function (item) {
       const li = document.createElement("li");
       li.className = `insight-card ${item.cls}`;
@@ -1915,6 +2193,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("ownerNameInput").value = state.ownerName || "";
     const dvSel = document.getElementById("defaultViewSelect");
     if (dvSel) dvSel.value = state.defaultView === "month" ? "month" : "day";
+    syncRemindersUi();
     if (typeof updateBackupReminder === "function") updateBackupReminder();
 
     const moodsList = document.getElementById("settingsMoodsList");
@@ -3806,6 +4085,190 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("fabAddMomentBtn").onclick = function () {
     openMomentModal(null, selectedDate);
   };
+
+  /* =========================================================
+     RAPPELS DOUX (notifications locales, propres à chaque appareil)
+     ========================================================= */
+  const REMINDERS_KEY = "ziigi_agenda_reminders";
+  const NOTIFIED_KEY = "ziigi_agenda_notified";
+
+  function loadReminderSettings() {
+    const def = { enabled: false, lead: 10, dailyEnabled: false, dailyTime: "20:00", lastDaily: "" };
+    try {
+      const raw = JSON.parse(localStorage.getItem(REMINDERS_KEY) || "null");
+      if (!raw || typeof raw !== "object") return def;
+      return {
+        enabled: raw.enabled === true,
+        lead: [0, 5, 10, 30, 60].includes(Number(raw.lead)) ? Number(raw.lead) : 10,
+        dailyEnabled: raw.dailyEnabled === true,
+        dailyTime: /^\d{2}:\d{2}$/.test(raw.dailyTime || "") ? raw.dailyTime : "20:00",
+        lastDaily: typeof raw.lastDaily === "string" ? raw.lastDaily : ""
+      };
+    } catch (err) {
+      return def;
+    }
+  }
+  function saveReminderSettings(s) {
+    try { localStorage.setItem(REMINDERS_KEY, JSON.stringify(s)); } catch (err) {}
+  }
+
+  function notificationsSupported() {
+    return typeof Notification !== "undefined";
+  }
+
+  function syncRemindersUi() {
+    const chk = document.getElementById("remindersEnabledCheck");
+    if (!chk) return;
+    const s = loadReminderSettings();
+    const supported = notificationsSupported();
+    const perm = supported ? Notification.permission : "unsupported";
+    const active = s.enabled && perm === "granted";
+
+    chk.checked = active;
+    chk.disabled = !supported || perm === "denied";
+    document.getElementById("remindersOptions").classList.toggle("hidden", !active);
+    document.getElementById("reminderLeadSelect").value = String(s.lead);
+    document.getElementById("reminderDailyCheck").checked = s.dailyEnabled;
+    document.getElementById("reminderDailyTime").value = s.dailyTime;
+
+    let msg = "Rappels désactivés.";
+    if (!supported) msg = "Les notifications ne sont pas disponibles ici. Sur iPhone ou iPad, installe d'abord l'app sur l'écran d'accueil (iOS 16.4 ou plus).";
+    else if (perm === "denied") msg = "Les notifications sont bloquées pour ce site. Autorise-les dans les réglages de ton appareil, puis reviens ici.";
+    else if (active) msg = "Rappels activés ✨";
+    document.getElementById("remindersStatus").textContent = msg;
+  }
+
+  function showSoftNotification(title, body, tag) {
+    const opts = { body: body, tag: tag, icon: "./icon-192.png", badge: "./icon-192.png", lang: "fr" };
+    if ("serviceWorker" in navigator) {
+      return navigator.serviceWorker.ready
+        .then(function (reg) { return reg.showNotification(title, opts); })
+        .catch(function () { try { new Notification(title, opts); } catch (err) {} });
+    }
+    try { new Notification(title, opts); } catch (err) {}
+    return Promise.resolve();
+  }
+
+  function loadNotifiedMap() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(NOTIFIED_KEY) || "{}");
+      return raw && typeof raw === "object" ? raw : {};
+    } catch (err) {
+      return {};
+    }
+  }
+  function saveNotifiedMap(map) {
+    const limit = Date.now() - 3 * 86400000;
+    Object.keys(map).forEach(function (k) { if (map[k] < limit) delete map[k]; });
+    try { localStorage.setItem(NOTIFIED_KEY, JSON.stringify(map)); } catch (err) {}
+  }
+
+  function checkReminders() {
+    if (!notificationsSupported() || Notification.permission !== "granted") return;
+    const s = loadReminderSettings();
+    if (!s.enabled) return;
+
+    const now = new Date();
+    const today = toDateStr(now);
+    const notified = loadNotifiedMap();
+    let changed = false;
+
+    // 1) Moments de l'horaire
+    getMomentsForDate(today).forEach(function (m) {
+      if (!m || !/^\d{2}:\d{2}$/.test(m.startTime || "")) return;
+      const parts = m.startTime.split(":");
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(parts[0]), Number(parts[1]), 0);
+      const diffMin = (start.getTime() - now.getTime()) / 60000;
+      if (diffMin > s.lead || diffMin <= -1) return;
+      const key = ["m", today, m.id, m.startTime, s.lead].join("|");
+      if (notified[key]) return;
+      notified[key] = Date.now();
+      changed = true;
+      const body = s.lead === 0
+        ? `C'est l'heure : « ${m.title} » (${m.startTime}).`
+        : `Petit rappel doux : « ${m.title} » commence à ${m.startTime}.`;
+      showSoftNotification("🗓️ " + (m.title || "Moment"), body, key);
+    });
+
+    // 2) Rappel quotidien « Prendre soin de moi »
+    if (s.dailyEnabled && s.lastDaily !== today) {
+      const p = s.dailyTime.split(":");
+      const at = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(p[0]), Number(p[1]), 0);
+      const sinceMin = (now.getTime() - at.getTime()) / 60000;
+      if (sinceMin >= 0 && sinceMin <= 120) {
+        const w = state.wellnessByDate[today];
+        const alreadyNoted = Boolean(w && (resolvePill("mood", w) || resolvePill("sleep", w) || w.waterGlasses > 0 || w.mealsCount > 0));
+        s.lastDaily = today;
+        saveReminderSettings(s);
+        if (!alreadyNoted) {
+          showSoftNotification("🌿 Un petit moment pour toi", "Comment te sens-tu aujourd'hui ? Tu peux noter ta journée quand tu veux.", "daily|" + today);
+        }
+      }
+    }
+
+    if (changed) saveNotifiedMap(notified);
+  }
+
+  document.getElementById("remindersEnabledCheck").onchange = function (e) {
+    const wanted = e.target.checked;
+    const s = loadReminderSettings();
+    if (!wanted) {
+      s.enabled = false;
+      saveReminderSettings(s);
+      syncRemindersUi();
+      showToast("Rappels désactivés.");
+      return;
+    }
+    if (!notificationsSupported()) { syncRemindersUi(); return; }
+    Promise.resolve(Notification.requestPermission()).then(function (perm) {
+      if (perm === "granted") {
+        s.enabled = true;
+        saveReminderSettings(s);
+        showToast("Rappels activés ✨");
+        checkReminders();
+      } else {
+        s.enabled = false;
+        saveReminderSettings(s);
+        showToast("Les notifications n'ont pas été autorisées.");
+      }
+      syncRemindersUi();
+    });
+  };
+  document.getElementById("reminderLeadSelect").onchange = function (e) {
+    const s = loadReminderSettings();
+    s.lead = Number(e.target.value);
+    saveReminderSettings(s);
+    showToast("Réglage enregistré.");
+  };
+  document.getElementById("reminderDailyCheck").onchange = function (e) {
+    const s = loadReminderSettings();
+    s.dailyEnabled = e.target.checked;
+    s.lastDaily = "";
+    saveReminderSettings(s);
+    showToast(s.dailyEnabled ? "Rappel quotidien activé." : "Rappel quotidien désactivé.");
+  };
+  document.getElementById("reminderDailyTime").onchange = function (e) {
+    const s = loadReminderSettings();
+    if (/^\d{2}:\d{2}$/.test(e.target.value)) s.dailyTime = e.target.value;
+    s.lastDaily = "";
+    saveReminderSettings(s);
+    showToast("Heure enregistrée.");
+  };
+  document.getElementById("reminderTestBtn").onclick = function () {
+    if (!notificationsSupported() || Notification.permission !== "granted") {
+      showToast("Active d'abord les rappels.");
+      return;
+    }
+    showSoftNotification("🔔 Test", "Voilà à quoi ressembleront tes rappels doux 🌸", "test");
+    showToast("Notification envoyée.");
+  };
+
+  setInterval(checkReminders, 30000);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") checkReminders();
+  });
+  window.addEventListener("focus", checkReminders);
+  setTimeout(checkReminders, 1500);
 
   /* Glisser vers la gauche / la droite pour changer de jour (vue Jour, écrans tactiles) */
   (function initDaySwipe() {

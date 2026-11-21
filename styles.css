@@ -2528,3 +2528,23 @@ input[type="checkbox"]:focus-visible {
 .recap-month-cell[data-level="2"] { background: color-mix(in srgb, var(--accent) 20%, var(--surface-soft)); }
 .recap-month-cell[data-level="3"] { background: color-mix(in srgb, var(--accent) 32%, var(--surface-soft)); }
 .recap-month-cell[data-level="4"] { background: color-mix(in srgb, var(--accent) 44%, var(--surface-soft)); }
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.check-row input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--accent);
+  flex: 0 0 auto;
+}
+
+#remindersOptions .row {
+  margin-top: 0.75rem;
+}
