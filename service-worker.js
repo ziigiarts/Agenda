@@ -1,4 +1,4 @@
-const CACHE_NAME = "mon-agenda-pwa-v43";
+const CACHE_NAME = "mon-agenda-pwa-v44";
 const ASSETS = [
   "./",
   "./index.html",

@@ -2222,6 +2222,7 @@
       <div class="row" style="justify-content:center;">
         <button id="cloudStatusPill" type="button" class="cloud-status-pill" title="Gérer mon compte cloud">☁️ Hors ligne (local)</button>
         <button id="gentleModeToggleBtn" type="button" class="gentle-mode-btn" title="Masquer le superflu pour les journées plus difficiles">🌿 Jour difficile</button>
+        <button id="installAppBtn" type="button" class="gentle-mode-btn hidden" title="Installer l'application sur ton téléphone ou ta tablette">📲 Installer l'app</button>
       </div>
     </header>
 
@@ -2618,7 +2619,8 @@
             <input id="importJsonInput" type="file" accept="application/json,.json" class="hidden" />
             <input id="importIcsInput" type="file" accept=".ics,text/calendar" class="hidden" />
           </div>
-          <div>
+          <div class="stack" style="gap: 0.25rem; align-items: flex-start;">
+            <button id="openFaqInstallFromSettingsBtn" class="ghost sm" type="button" style="padding-left: 0.25rem;">📲 Comment installer l'agenda sur Android ou iOS ?</button>
             <button id="openFaqFromBackupBtn" class="ghost sm" type="button" style="padding-left: 0.25rem;">❓ Comment exporter mon fichier .ics depuis Google Agenda ?</button>
           </div>
         </article>
@@ -2806,6 +2808,31 @@
         <button id="closeFaqModalBtn" class="ghost sm" type="button" aria-label="Fermer">✕</button>
       </div>
       <div class="faq-list">
+        <details id="faqItemInstall" class="faq-item">
+          <summary>📲 Comment installer l'agenda sur Android et iOS ?</summary>
+          <div class="faq-answer">
+            <p>Tu peux installer cet agenda sur ton écran d'accueil comme une vraie application (en plein écran, sans passer par le Play Store ni l'App Store) :</p>
+            <div id="faqNativeInstallWrap" class="hidden" style="margin: 0.2rem 0;">
+              <button id="faqTriggerInstallBtn" type="button" class="primary sm">📲 Installer maintenant sur cet appareil</button>
+            </div>
+            <p><strong>🤖 Sur Android (Chrome, Edge, Samsung Internet) :</strong></p>
+            <ol>
+              <li>Ouvre le lien de l'agenda dans <strong>Chrome</strong> (évite le navigateur intégré de Messenger ou Facebook).</li>
+              <li>Touche le bouton <strong>📲 Installer l'app</strong> en haut de l'agenda, ou ouvre le menu <strong>⋮</strong> en haut à droite.</li>
+              <li>Choisis <strong>Installer l'application</strong> (ou <strong>Ajouter à l'écran d'accueil</strong>), puis confirme.</li>
+            </ol>
+            <p><strong>🍎 Sur iPhone et iPad (iOS — Safari obligatoire) :</strong></p>
+            <ol>
+              <li>Ouvre le lien de l'agenda dans <strong>Safari</strong> (l'installation sur l'écran d'accueil passe par Safari sur iOS).</li>
+              <li>Touche le bouton <strong>Partager</strong> (le carré avec une flèche vers le haut) en bas sur iPhone ou en haut à droite sur iPad.</li>
+              <li>Fais défiler le menu vers le bas et choisis <strong>Sur l'écran d'accueil</strong>.</li>
+              <li>Touche <strong>Ajouter</strong> en haut à droite.</li>
+            </ol>
+            <p><strong>💻 Sur ordinateur (Chrome / Edge) :</strong> clique sur la petite icône d'installation dans la barre d'adresse à droite.</p>
+            <p class="muted">Astuce : si tu te connectes au Cloud (☁️), ton agenda installé se synchronisera automatiquement avec tous tes appareils.</p>
+          </div>
+        </details>
+
         <details id="faqItemIcs" class="faq-item">
           <summary>📅 Comment importer mon Google Agenda (.ics) ?</summary>
           <div class="faq-answer">
@@ -5484,11 +5511,17 @@
       };
 
       // Mini-FAQ Modale
-      function openFaqModal(openIcsItem) {
+      function openFaqModal(targetSection) {
         const modal = document.getElementById("faqModal");
-        if (openIcsItem) {
-          const icsDetails = document.getElementById("faqItemIcs");
-          if (icsDetails) icsDetails.open = true;
+        const sectionId = targetSection === true ? "faqItemIcs" : (typeof targetSection === "string" ? targetSection : "");
+        if (sectionId) {
+          const detailsEl = document.getElementById(sectionId);
+          if (detailsEl) {
+            detailsEl.open = true;
+            setTimeout(function () {
+              detailsEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }, 30);
+          }
         }
         modal.classList.remove("hidden");
       }
@@ -5498,7 +5531,73 @@
       }
 
       document.getElementById("navFaqBtn").onclick = function () { openFaqModal(false); };
-      document.getElementById("openFaqFromBackupBtn").onclick = function () { openFaqModal(true); };
+      document.getElementById("openFaqFromBackupBtn").onclick = function () { openFaqModal("faqItemIcs"); };
+      const openFaqInstallBtn = document.getElementById("openFaqInstallFromSettingsBtn");
+      if (openFaqInstallBtn) {
+        openFaqInstallBtn.onclick = function () { openFaqModal("faqItemInstall"); };
+      }
+
+      // Installation PWA (Android natif + guide iOS/Android)
+      let deferredInstallPrompt = null;
+      const installAppBtn = document.getElementById("installAppBtn");
+      const faqNativeInstallWrap = document.getElementById("faqNativeInstallWrap");
+      const faqTriggerInstallBtn = document.getElementById("faqTriggerInstallBtn");
+
+      function isRunningStandalone() {
+        return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      }
+
+      function updateInstallUi() {
+        if (!installAppBtn) return;
+        if (isRunningStandalone()) {
+          installAppBtn.classList.add("hidden");
+          if (faqNativeInstallWrap) faqNativeInstallWrap.classList.add("hidden");
+          return;
+        }
+        installAppBtn.classList.remove("hidden");
+        if (faqNativeInstallWrap) {
+          faqNativeInstallWrap.classList.toggle("hidden", !deferredInstallPrompt);
+        }
+      }
+
+      function triggerNativeInstallOrGuide() {
+        if (deferredInstallPrompt) {
+          deferredInstallPrompt.prompt();
+          deferredInstallPrompt.userChoice.then(function (choice) {
+            if (choice && choice.outcome === "accepted") {
+              showToast("Installation en cours 📲");
+            }
+            deferredInstallPrompt = null;
+            updateInstallUi();
+          }).catch(function () {
+            openFaqModal("faqItemInstall");
+          });
+        } else {
+          openFaqModal("faqItemInstall");
+        }
+      }
+
+      window.addEventListener("beforeinstallprompt", function (e) {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        updateInstallUi();
+      });
+
+      window.addEventListener("appinstalled", function () {
+        deferredInstallPrompt = null;
+        if (installAppBtn) installAppBtn.classList.add("hidden");
+        if (faqNativeInstallWrap) faqNativeInstallWrap.classList.add("hidden");
+        showToast("Agenda installé sur ton appareil ✨");
+      });
+
+      if (installAppBtn) installAppBtn.onclick = triggerNativeInstallOrGuide;
+      if (faqTriggerInstallBtn) {
+        faqTriggerInstallBtn.onclick = function () {
+          closeFaqModal();
+          triggerNativeInstallOrGuide();
+        };
+      }
+      updateInstallUi();
       document.getElementById("closeFaqModalBtn").onclick = closeFaqModal;
       document.getElementById("faqDoneBtn").onclick = closeFaqModal;
       document.getElementById("faqModal").addEventListener("click", function (e) {
