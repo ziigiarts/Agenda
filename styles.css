@@ -2544,3 +2544,133 @@ input[type="checkbox"]:focus-visible {
   accent-color: var(--accent);
   flex: 0 0 auto;
 }
+
+
+/* =========================================================
+   14. ICÔNES SVG DUOTONE ADAPTATIVES & SÉLECTEUR (v61)
+   ========================================================= */
+.ziigi-icon {
+  width: 19px;
+  height: 19px;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  overflow: visible;
+  --ziigi-fill: var(--accent-soft);
+}
+.ziigi-icon-nav {
+  width: 21px;
+  height: 21px;
+}
+.ziigi-icon-sm {
+  width: 15px;
+  height: 15px;
+}
+
+.ziigi-icon .ziigi-bg {
+  fill: var(--ziigi-fill);
+  opacity: 0.92;
+  transform: translate(1.1px, 1.3px);
+  transition: fill 0.2s ease, opacity 0.2s ease;
+}
+.ziigi-icon .ziigi-stroke {
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: stroke 0.2s ease;
+}
+
+/* Tons automatiques reliés aux variables des 8 thèmes */
+.ziigi-tone-accent { --ziigi-fill: var(--accent-soft); }
+.ziigi-tone-mood   { --ziigi-fill: var(--pill-mood-bg); }
+.ziigi-tone-sleep  { --ziigi-fill: var(--pill-sleep-bg); }
+.ziigi-tone-meal   { --ziigi-fill: var(--pill-meal-bg); }
+.ziigi-tone-water  { --ziigi-fill: var(--pill-water-bg); }
+.ziigi-tone-care   { --ziigi-fill: var(--pill-care-bg); }
+
+/* Contraste propre sur boutons actifs / pastilles sélectionnées */
+.main-nav button.active .ziigi-icon .ziigi-bg,
+.view-switcher button.active .ziigi-icon .ziigi-bg,
+.note-mode-switch button.active .ziigi-icon .ziigi-bg,
+.draw-tool-btn.active .ziigi-icon .ziigi-bg {
+  fill: currentColor;
+  opacity: 0.22;
+}
+.pill-btn.selected .ziigi-icon .ziigi-bg {
+  fill: currentColor;
+  opacity: 0.18;
+}
+.pill-btn.care-pill:not(.selected) .ziigi-icon .ziigi-bg {
+  opacity: 0.35;
+}
+
+/* Effet néon doux sur les thèmes Gâteau Bleuet & Milkshake Fraise */
+[data-theme="gateau-bleuet"] .ziigi-icon,
+[data-theme="milkshake-fraise"] .ziigi-icon {
+  filter: drop-shadow(0 0 2.5px var(--accent));
+}
+[data-theme="gateau-bleuet"] .pill-btn.care-pill:not(.selected) .ziigi-icon .ziigi-bg,
+[data-theme="milkshake-fraise"] .pill-btn.care-pill:not(.selected) .ziigi-icon .ziigi-bg {
+  opacity: 0.45;
+}
+
+/* Alignement propre des boutons contenant une icône SVG */
+.view-switcher button,
+.note-mode-switch button,
+.draw-tool-btn,
+.table-pill,
+.week-mini-pill,
+.pill-setting-row .row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+/* Sélecteur d'icônes Duotone dans les Paramètres */
+.icon-picker-wrap {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.icon-picker-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.icon-picker-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.icon-picker-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-subtle);
+  background: var(--surface-soft);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.14s ease, background-color 0.14s ease, transform 0.08s ease;
+}
+.icon-picker-btn:hover {
+  background: var(--surface-muted);
+  border-color: var(--accent);
+}
+.icon-picker-btn.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-soft-text);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.care-add-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

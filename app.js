@@ -96,6 +96,140 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* =========================================================
+     1b. BIBLIOTHÈQUE D'ICÔNES SVG DUOTONE ADAPTATIVES (v61)
+     ========================================================= */
+  const ZIIGI_ICONS = {
+    "nav_agenda": { label: "Agenda", emoji: "📅", bg: "<rect class=\"ziigi-bg\" x=\"3.5\" y=\"6.5\" width=\"17\" height=\"14\" rx=\"3\" />", stroke: "<rect class=\"ziigi-stroke\" x=\"3.5\" y=\"5.5\" width=\"17\" height=\"15\" rx=\"3\" /><path class=\"ziigi-stroke\" d=\"M3.5 10.5h17M8 3.5v4M16 3.5v4\" /><circle cx=\"8.5\" cy=\"14.5\" r=\"0.8\" fill=\"currentColor\" /><circle cx=\"12\" cy=\"14.5\" r=\"0.8\" fill=\"currentColor\" /><circle cx=\"15.5\" cy=\"14.5\" r=\"0.8\" fill=\"currentColor\" />" },
+    "nav_search": { label: "Rechercher", emoji: "🔍", bg: "<circle class=\"ziigi-bg\" cx=\"11\" cy=\"11\" r=\"6.5\" />", stroke: "<circle class=\"ziigi-stroke\" cx=\"11\" cy=\"11\" r=\"6.5\" /><path class=\"ziigi-stroke\" d=\"M16 16l4.2 4.2\" />" },
+    "nav_cloud": { label: "Cloud", emoji: "☁️", bg: "<path class=\"ziigi-bg\" d=\"M6.5 18.5h11a4 4 0 0 0 .8-7.9A5.5 5.5 0 0 0 7.6 9.5a3.8 3.8 0 0 0-1.1 9z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M6.5 18.5h11a4 4 0 0 0 .8-7.9A5.5 5.5 0 0 0 7.6 9.5a3.8 3.8 0 0 0-1.1 9z\" />" },
+    "nav_cloud_on": { label: "Cloud connecté", emoji: "🟢", bg: "<path class=\"ziigi-bg\" d=\"M6.5 18.5h11a4 4 0 0 0 .8-7.9A5.5 5.5 0 0 0 7.6 9.5a3.8 3.8 0 0 0-1.1 9z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M6.5 18.5h11a4 4 0 0 0 .8-7.9A5.5 5.5 0 0 0 7.6 9.5a3.8 3.8 0 0 0-1.1 9z\" /><path class=\"ziigi-stroke\" d=\"M9.5 13.8l1.8 1.8 3.5-3.6\" />" },
+    "nav_settings": { label: "Paramètres", emoji: "⚙️", bg: "<circle class=\"ziigi-bg\" cx=\"12\" cy=\"12\" r=\"7\" />", stroke: "<circle class=\"ziigi-stroke\" cx=\"12\" cy=\"12\" r=\"3\" /><path class=\"ziigi-stroke\" d=\"M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3h.1a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8v.1a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z\" />" },
+    "nav_faq": { label: "Aide & FAQ", emoji: "❓", bg: "<circle class=\"ziigi-bg\" cx=\"12\" cy=\"12\" r=\"8.5\" />", stroke: "<circle class=\"ziigi-stroke\" cx=\"12\" cy=\"12\" r=\"8.5\" /><path class=\"ziigi-stroke\" d=\"M9.6 9.4a2.5 2.5 0 0 1 4.7 1.1c0 1.7-2.3 2.1-2.3 3.5\" /><circle cx=\"12\" cy=\"17.2\" r=\"0.9\" fill=\"currentColor\" />" },
+    "nav_gentle": { label: "Jour difficile", emoji: "🛡️", bg: "<path class=\"ziigi-bg\" d=\"M12 3.5l7 2.8v5.2c0 4.6-3 7.8-7 9.2-4-1.4-7-4.6-7-9.2V6.3l7-2.8z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M12 3.5l7 2.8v5.2c0 4.6-3 7.8-7 9.2-4-1.4-7-4.6-7-9.2V6.3l7-2.8z\" /><path class=\"ziigi-stroke\" d=\"M12 15.2s-3.2-2-3.2-4.4a1.9 1.9 0 0 1 3.2-1.3 1.9 1.9 0 0 1 3.2 1.3c0 2.4-3.2 4.4-3.2 4.4z\" />" },
+    "nav_recap": { label: "Récap", emoji: "📊", bg: "<rect class=\"ziigi-bg\" x=\"4.5\" y=\"13\" width=\"3.5\" height=\"6.5\" rx=\"1\" /><rect class=\"ziigi-bg\" x=\"10.2\" y=\"9\" width=\"3.5\" height=\"10.5\" rx=\"1\" /><rect class=\"ziigi-bg\" x=\"16\" y=\"5\" width=\"3.5\" height=\"14.5\" rx=\"1\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M3 19.5h18\" /><rect class=\"ziigi-stroke\" x=\"4.5\" y=\"13\" width=\"3.5\" height=\"6.5\" rx=\"1\" /><rect class=\"ziigi-stroke\" x=\"10.2\" y=\"9\" width=\"3.5\" height=\"10.5\" rx=\"1\" /><rect class=\"ziigi-stroke\" x=\"16\" y=\"5\" width=\"3.5\" height=\"14.5\" rx=\"1\" />" },
+    "tool_text": { label: "Texte", emoji: "⌨️", bg: "<rect class=\"ziigi-bg\" x=\"4\" y=\"5\" width=\"16\" height=\"14\" rx=\"2.5\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M6 7.5h12M12 7.5v10M9 17.5h6\" />" },
+    "tool_pencil": { label: "Crayon", emoji: "✏️", bg: "<path class=\"ziigi-bg\" d=\"M16.5 4.5l3 3L8.5 18.5l-4 1 1-4 11-11z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M16.5 4.5l3 3L8.5 18.5l-4 1 1-4 11-11zM14 7l3 3\" />" },
+    "tool_eraser": { label: "Gomme", emoji: "🧽", bg: "<path class=\"ziigi-bg\" d=\"M15.5 5.5l4 4-8.5 8.5H6.5l-2-2 11-10.5z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M15.5 5.5l4 4-8.5 8.5H6.5l-2-2 11-10.5zM11 10l4 4M11 18h8.5\" />" },
+    "tool_palm": { label: "Rejet paume", emoji: "✋", bg: "<path class=\"ziigi-bg\" d=\"M7.5 11.5V6.5a1.5 1.5 0 0 1 3 0v4M10.5 5.5a1.5 1.5 0 0 1 3 0v5M13.5 6.5a1.5 1.5 0 0 1 3 0v5.5a5.5 5.5 0 0 1-5.5 5.5h-1a4.5 4.5 0 0 1-4.5-4.5v-2a1.5 1.5 0 0 1 3 0\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M7.5 11.5V6.5a1.5 1.5 0 0 1 3 0v4m0-5a1.5 1.5 0 0 1 3 0v5m0-4a1.5 1.5 0 0 1 3 0v6a5.5 5.5 0 0 1-5.5 5.5h-1a4.5 4.5 0 0 1-4.5-4.5v-2a1.5 1.5 0 0 1 2-1.4\" />" },
+    "tool_paper": { label: "Papier", emoji: "📄", bg: "<path class=\"ziigi-bg\" d=\"M6.5 4h8l4 4v12a1.5 1.5 0 0 1-1.5 1.5h-10.5A1.5 1.5 0 0 1 5 20V5.5A1.5 1.5 0 0 1 6.5 4z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M6.5 4h7.5l4.5 4.5V20a1.5 1.5 0 0 1-1.5 1.5H6.5A1.5 1.5 0 0 1 5 20V5.5A1.5 1.5 0 0 1 6.5 4z\" /><path class=\"ziigi-stroke\" d=\"M14 4v4.5h4.5M8.5 12h7M8.5 15.5h5\" />" },
+    "tool_undo": { label: "Annuler", emoji: "↩️", bg: "<circle class=\"ziigi-bg\" cx=\"12\" cy=\"12\" r=\"7.5\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M9 8L5 12l4 4\" /><path class=\"ziigi-stroke\" d=\"M5.5 12H14a4.5 4.5 0 0 1 0 9h-2\" />" },
+    "tool_trash": { label: "Effacer", emoji: "🗑️", bg: "<path class=\"ziigi-bg\" d=\"M6.5 7.5h11l-.9 11.5a1.8 1.8 0 0 1-1.8 1.5H9.2a1.8 1.8 0 0 1-1.8-1.5L6.5 7.5z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M4.5 7h15M9.5 7V5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v2M6.5 7l.9 12a1.8 1.8 0 0 0 1.8 1.5h5.6a1.8 1.8 0 0 0 1.8-1.5l.9-12M10 11v5.5M14 11v5.5\" />" },
+    "ui_export": { label: "Exporter", emoji: "📤", bg: "<rect class=\"ziigi-bg\" x=\"4.5\" y=\"13.5\" width=\"15\" height=\"6\" rx=\"2\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M12 14.5V4.5m0 0L8.5 8M12 4.5L15.5 8M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4\" />" },
+    "mood_1": { label: "Fatiguée / Pluie", emoji: "🌧️", bg: "<path class=\"ziigi-bg\" d=\"M6.5 15h11a3.5 3.5 0 0 0 .6-6.9A4.8 4.8 0 0 0 8.8 7a3.3 3.3 0 0 0-2.3 8z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M6.5 15h11a3.5 3.5 0 0 0 .6-6.9A4.8 4.8 0 0 0 8.8 7a3.3 3.3 0 0 0-2.3 8z\" /><path class=\"ziigi-stroke\" d=\"M8.5 18l-1 2.2M12.5 18l-1 2.2M16.5 18l-1 2.2\" />" },
+    "mood_2": { label: "Calme / Nuage", emoji: "☁️", bg: "<path class=\"ziigi-bg\" d=\"M6 17.5h12a3.8 3.8 0 0 0 .7-7.5A5.2 5.2 0 0 0 8.3 8.8a3.6 3.6 0 0 0-2.3 8.7z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M6 17.5h12a3.8 3.8 0 0 0 .7-7.5A5.2 5.2 0 0 0 8.3 8.8a3.6 3.6 0 0 0-2.3 8.7z\" />" },
+    "mood_3": { label: "Sereine / Éclaircie", emoji: "🌤️", bg: "<circle class=\"ziigi-bg\" cx=\"9\" cy=\"9\" r=\"3.6\" /><path class=\"ziigi-bg\" d=\"M9 18h9a3 3 0 0 0 .4-6 4 4 0 0 0-7.7-1.2A3 3 0 0 0 9 18z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M9 3.5V5M4.5 9H3m2.2-3.8L4.2 4.2M12.8 5.2l1-1\" /><path class=\"ziigi-stroke\" d=\"M6.4 11.4a3.5 3.5 0 1 1 5.8-3.6\" /><path class=\"ziigi-stroke\" d=\"M9 18.5h9a3 3 0 0 0 .4-6 4 4 0 0 0-7.7-1.2A3 3 0 0 0 9 18.5z\" />" },
+    "mood_4": { label: "Pleine d'élan / Soleil", emoji: "☀️", bg: "<circle class=\"ziigi-bg\" cx=\"12\" cy=\"12\" r=\"4.5\" />", stroke: "<circle class=\"ziigi-stroke\" cx=\"12\" cy=\"12\" r=\"4.5\" /><path class=\"ziigi-stroke\" d=\"M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6\" />" },
+    "mood_heart": { label: "Cœur doux", emoji: "🤍", bg: "<path class=\"ziigi-bg\" d=\"M12 19.5s-7-4.4-7-9.8A4.2 4.2 0 0 1 12 7a4.2 4.2 0 0 1 7 2.7c0 5.4-7 9.8-7 9.8z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M12 19.5s-7-4.4-7-9.8A4.2 4.2 0 0 1 12 7a4.2 4.2 0 0 1 7 2.7c0 5.4-7 9.8-7 9.8z\" />" },
+    "mood_sparkle": { label: "Étincelle", emoji: "✨", bg: "<path class=\"ziigi-bg\" d=\"M12 3.5l2 5.5 5.5 2-5.5 2-2 5.5-2-5.5-5.5-2 5.5-2 2-5.5z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M12 3.5l2 5.5 5.5 2-5.5 2-2 5.5-2-5.5-5.5-2 5.5-2 2-5.5zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8z\" />" },
+    "mood_storm": { label: "Tendue / Orage", emoji: "⛈️", bg: "<path class=\"ziigi-bg\" d=\"M6.5 14.5h11a3.5 3.5 0 0 0 .6-6.9A4.8 4.8 0 0 0 8.8 6.5a3.3 3.3 0 0 0-2.3 8z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M6.5 14.5h11a3.5 3.5 0 0 0 .6-6.9A4.8 4.8 0 0 0 8.8 6.5a3.3 3.3 0 0 0-2.3 8z\" /><path class=\"ziigi-stroke\" d=\"M12.5 14.5l-2 3.5h2.5l-1.5 3\" />" },
+    "mood_flower": { label: "Apaisée / Fleur", emoji: "🌸", bg: "<circle class=\"ziigi-bg\" cx=\"12\" cy=\"12\" r=\"6\" />", stroke: "<circle class=\"ziigi-stroke\" cx=\"12\" cy=\"12\" r=\"2.2\" /><path class=\"ziigi-stroke\" d=\"M12 9.8a2.6 2.6 0 1 1 2.2-4.2 2.6 2.6 0 1 1 3.4 4.8 2.6 2.6 0 1 1-1.3 5.2 2.6 2.6 0 1 1-4.3 2.6 2.6 2.6 0 1 1-4.3-2.6 2.6 2.6 0 1 1-1.3-5.2 2.6 2.6 0 1 1 3.4-4.8A2.6 2.6 0 0 1 12 9.8z\" />" },
+    "mood_battery": { label: "Énergie basse", emoji: "🪫", bg: "<rect class=\"ziigi-bg\" x=\"3.5\" y=\"7.5\" width=\"15\" height=\"9\" rx=\"2\" />", stroke: "<rect class=\"ziigi-stroke\" x=\"3.5\" y=\"7.5\" width=\"15\" height=\"9\" rx=\"2\" /><path class=\"ziigi-stroke\" d=\"M20.5 10.5v3M7 10.5v3\" />" },
+    "sleep_1": { label: "Nuit courte", emoji: "🌑", bg: "<path class=\"ziigi-bg\" d=\"M14.2 4.8A7.5 7.5 0 1 0 14.2 19.2A5.8 7.5 0 0 1 14.2 4.8Z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M14.2 4.8A7.5 7.5 0 1 0 14.2 19.2A5.8 7.5 0 0 1 14.2 4.8Z\" />" },
+    "sleep_2": { label: "Repos moyen", emoji: "🌓", bg: "<path class=\"ziigi-bg\" d=\"M13.5 4.5A7.5 7.5 0 0 0 13.5 19.5Z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M13.5 4.5A7.5 7.5 0 0 0 13.5 19.5Z\" />" },
+    "sleep_3": { label: "Bon sommeil", emoji: "🌙", bg: "<path class=\"ziigi-bg\" d=\"M14.5 5.2A7 7 0 1 0 19 16.2A5.4 5.4 0 0 1 14.5 5.2Z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M14.5 5.2A7 7 0 1 0 19 16.2A5.4 5.4 0 0 1 14.5 5.2Z\" /><path class=\"ziigi-stroke\" d=\"M17.5 4.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8z\" />" },
+    "sleep_4": { label: "Très réparateur", emoji: "🌕", bg: "<circle class=\"ziigi-bg\" cx=\"12\" cy=\"12\" r=\"5.5\" />", stroke: "<circle class=\"ziigi-stroke\" cx=\"12\" cy=\"12\" r=\"5.5\" /><path class=\"ziigi-stroke\" d=\"M19 4l.55 1.45L21 6l-1.45.55L19 8l-.55-1.45L17 6l1.45-.55L19 4z\" /><path class=\"ziigi-stroke\" d=\"M5.2 17.2l.45 1.15 1.15.45-1.15.45-.45 1.15-.45-1.15-1.15-.45 1.15-.45.45-1.15z\" /><circle cx=\"5.5\" cy=\"6.2\" r=\"1\" fill=\"currentColor\" /><circle cx=\"19.2\" cy=\"17.8\" r=\"0.9\" fill=\"currentColor\" />" },
+    "sleep_bed": { label: "Sieste / Repos", emoji: "🛏️", bg: "<rect class=\"ziigi-bg\" x=\"3.5\" y=\"11\" width=\"17\" height=\"5.5\" rx=\"1.5\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M3.5 7v11M20.5 12v6M3.5 14h17M3.5 11h14a3 3 0 0 1 3 3\" /><circle class=\"ziigi-stroke\" cx=\"7.5\" cy=\"9.5\" r=\"1.3\" />" },
+    "sleep_stars": { label: "Nuit étoilée", emoji: "🌟", bg: "<path class=\"ziigi-bg\" d=\"M12 4l2.2 4.8 5.3.6-4 3.6 1.1 5.2L12 15.6 7.4 18.2l1.1-5.2-4-3.6 5.3-.6L12 4z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M12 4l2.2 4.8 5.3.6-4 3.6 1.1 5.2L12 15.6 7.4 18.2l1.1-5.2-4-3.6 5.3-.6L12 4z\" />" },
+    "meal": { label: "Repas", emoji: "🍽️", bg: "<circle class=\"ziigi-bg\" cx=\"12\" cy=\"12.5\" r=\"5\" />", stroke: "<circle class=\"ziigi-stroke\" cx=\"12\" cy=\"12.5\" r=\"5\" /><path class=\"ziigi-stroke\" d=\"M4.5 6.5v4.5a1.5 1.5 0 0 0 3 0V6.5M6 6.5v12M19.5 6.5v12M19.5 6.5c-1.5 1-2 2.8-2 5h2\" />" },
+    "snack": { label: "Collation", emoji: "🍎", bg: "<path class=\"ziigi-bg\" d=\"M12 8.5c-3-1.5-6.5.5-6.5 4.5 0 3.8 2.5 7 5 7 1 0 1.2-.5 1.5-.5s.5.5 1.5.5c2.5 0 5-3.2 5-7 0-4-3.5-6-6.5-4.5z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M12 8.5c-3-1.5-6.5.5-6.5 4.5 0 3.8 2.5 7 5 7 1 0 1.2-.5 1.5-.5s.5.5 1.5.5c2.5 0 5-3.2 5-7 0-4-3.5-6-6.5-4.5z\" /><path class=\"ziigi-stroke\" d=\"M12 8.5c0-2 1.2-3.5 2.5-4M12 6.5c-1.2-1.2-2.8-1-3.2-.5\" />" },
+    "water": { label: "Verre d'eau", emoji: "💧", bg: "<path class=\"ziigi-bg\" d=\"M12 4s-5.5 5.4-5.5 10a5.5 5.5 0 1 0 11 0C17.5 9.4 12 4 12 4z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M12 4s-5.5 5.4-5.5 10a5.5 5.5 0 1 0 11 0C17.5 9.4 12 4 12 4z\" /><path class=\"ziigi-stroke\" d=\"M9.5 14.5a2.6 2.6 0 0 0 2 2.2\" />" },
+    "care_1": { label: "Douche douce", emoji: "🚿", bg: "<path class=\"ziigi-bg\" d=\"M6.5 11.5a5.5 5.5 0 0 1 11 0H6.5z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M6.5 11.5a5.5 5.5 0 0 1 11 0H6.5zM12 6V4h5.5\" /><path class=\"ziigi-stroke\" d=\"M8.5 15v1.5M12 15v2M15.5 15v1.5M10 18.5v1.2M14 18.5v1.2\" />" },
+    "care_2": { label: "Respiration", emoji: "🌬️", bg: "<path class=\"ziigi-bg\" d=\"M4 9.5h11a2.5 2.5 0 1 0-2.5-2.5M4 13.5h14a2.5 2.5 0 1 1-2.5 2.5\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M4 9.5h10.5a2.3 2.3 0 1 0-2.3-2.3M4 13.5h13.5a2.3 2.3 0 1 1-2.3 2.3M4 17.2h7.5\" />" },
+    "care_3": { label: "Étirements", emoji: "🧘", bg: "<circle class=\"ziigi-bg\" cx=\"12\" cy=\"5.5\" r=\"2\" /><path class=\"ziigi-bg\" d=\"M9 11h6v5H9z\" />", stroke: "<circle class=\"ziigi-stroke\" cx=\"12\" cy=\"5.5\" r=\"2\" /><path class=\"ziigi-stroke\" d=\"M7 6.5l5 3.5 5-3.5M12 10v5.5M12 15.5l-3.5 4.5M12 15.5l3.5 4.5\" />" },
+    "care_4": { label: "Boisson chaude", emoji: "☕", bg: "<path class=\"ziigi-bg\" d=\"M5 10h11v5.5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V10z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M5 10h11v5.5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V10zM16 11.5h1.8a2 2 0 0 1 0 4H16M8.5 6.5c0-1 .8-1.5.8-2.3M12 6.5c0-1 .8-1.5.8-2.3\" />" },
+    "care_5": { label: "Pause calme", emoji: "⏸️", bg: "<circle class=\"ziigi-bg\" cx=\"12\" cy=\"12\" r=\"8.5\" />", stroke: "<circle class=\"ziigi-stroke\" cx=\"12\" cy=\"12\" r=\"8.5\" /><path class=\"ziigi-stroke\" d=\"M9.8 8.8v6.4M14.2 8.8v6.4\" />" },
+    "care_6": { label: "Exercice léger", emoji: "🏋️", bg: "<rect class=\"ziigi-bg\" x=\"5.5\" y=\"7.5\" width=\"3\" height=\"9\" rx=\"1.2\" /><rect class=\"ziigi-bg\" x=\"15.5\" y=\"7.5\" width=\"3\" height=\"9\" rx=\"1.2\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M8.5 12h7\" /><rect class=\"ziigi-stroke\" x=\"5.5\" y=\"7.5\" width=\"3\" height=\"9\" rx=\"1.2\" /><rect class=\"ziigi-stroke\" x=\"15.5\" y=\"7.5\" width=\"3\" height=\"9\" rx=\"1.2\" /><path class=\"ziigi-stroke\" d=\"M3.5 9.5v5M20.5 9.5v5\" />" },
+    "act_book": { label: "Lecture", emoji: "📖", bg: "<path class=\"ziigi-bg\" d=\"M4 6.5c2.5-.8 5.5-.5 8 1 2.5-1.5 5.5-1.8 8-1v11.5c-2.5-.8-5.5-.5-8 1-2.5-1.5-5.5-1.8-8-1V6.5z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M4 6.5c2.5-.8 5.5-.5 8 1 2.5-1.5 5.5-1.8 8-1v11.5c-2.5-.8-5.5-.5-8 1-2.5-1.5-5.5-1.8-8-1V6.5zM12 7.5V19\" /><path class=\"ziigi-stroke\" d=\"M6.8 10.5h2.5M6.8 13.5h2.5M14.7 10.5h2.5M14.7 13.5h2.5\" />" },
+    "act_palette": { label: "Créatif / Dessin", emoji: "🎨", bg: "<path class=\"ziigi-bg\" d=\"M12 4a8 8 0 1 0 0 16 1.8 1.8 0 0 0 1.8-1.8c0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2A1.8 1.8 0 0 1 14.6 14H16a4 4 0 0 0 4-4c0-3.3-3.6-6-8-6z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M12 4a8 8 0 1 0 0 16 1.8 1.8 0 0 0 1.8-1.8c0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2A1.8 1.8 0 0 1 14.6 14H16a4 4 0 0 0 4-4c0-3.3-3.6-6-8-6z\" /><circle cx=\"8.5\" cy=\"10.5\" r=\"0.9\" fill=\"currentColor\" /><circle cx=\"11.5\" cy=\"8\" r=\"0.9\" fill=\"currentColor\" /><circle cx=\"15\" cy=\"9.5\" r=\"0.9\" fill=\"currentColor\" />" },
+    "act_music": { label: "Musique", emoji: "🎵", bg: "<circle class=\"ziigi-bg\" cx=\"8\" cy=\"17\" r=\"2.8\" /><circle class=\"ziigi-bg\" cx=\"17\" cy=\"15\" r=\"2.8\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M10.5 17V6.5l9-2V15\" /><circle class=\"ziigi-stroke\" cx=\"8\" cy=\"17\" r=\"2.5\" /><circle class=\"ziigi-stroke\" cx=\"17\" cy=\"15\" r=\"2.5\" />" },
+    "act_plant": { label: "Plantes", emoji: "🪴", bg: "<path class=\"ziigi-bg\" d=\"M7.5 14h9l-1.2 6H8.7l-1.2-6z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M7.5 14h9l-1.2 6H8.7l-1.2-6zM12 14V8M12 11c-3 0-5-2-5-4.5 2.5 0 5 1.5 5 4.5zM12 9.5c3 0 5-2 5-4.5-2.5 0-5 1.5-5 4.5z\" />" },
+    "act_meds": { label: "Santé / Soin", emoji: "💊", bg: "<path class=\"ziigi-bg\" d=\"M10.5 6.5l7 7-3.5 3.5a4 4 0 0 1-5.7 0l-1.3-1.3a4 4 0 0 1 0-5.7l3.5-3.5z\" />", stroke: "<rect class=\"ziigi-stroke\" x=\"6\" y=\"8\" width=\"12\" height=\"8\" rx=\"4\" transform=\"rotate(-45 12 12)\" /><path class=\"ziigi-stroke\" d=\"M9.2 9.2l5.6 5.6\" />" },
+    "act_clean": { label: "Rangement doux", emoji: "📦", bg: "<path class=\"ziigi-bg\" d=\"M5 10h14v8.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 18.5V10z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M5 10v8.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V10M5 10L3.2 6.5h7.3L12 10H5zM19 10l1.8-3.5h-7.3L12 10h7zM10 14h4\" />" },
+    "act_chat": { label: "Parler à un proche", emoji: "💬", bg: "<path class=\"ziigi-bg\" d=\"M4.5 6.5h15a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3v-3H4.5A1.5 1.5 0 0 1 3 16V8a1.5 1.5 0 0 1 1.5-1.5z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M5 6h14a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2H10l-4.5 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z\" /><path class=\"ziigi-stroke\" d=\"M8.5 11.5h7M8.5 14.5h4.5\" />" },
+    "act_journal": { label: "Écrire / Carnet", emoji: "📓", bg: "<rect class=\"ziigi-bg\" x=\"5.5\" y=\"4\" width=\"13\" height=\"16\" rx=\"2\" />", stroke: "<rect class=\"ziigi-stroke\" x=\"5.5\" y=\"4\" width=\"13\" height=\"16\" rx=\"2\" /><path class=\"ziigi-stroke\" d=\"M9 4v16M12 9h4M12 13h4\" />" },
+    "act_game": { label: "Jeu / Détente", emoji: "🎮", bg: "<rect class=\"ziigi-bg\" x=\"3.5\" y=\"8\" width=\"17\" height=\"9\" rx=\"4.5\" />", stroke: "<rect class=\"ziigi-stroke\" x=\"3.5\" y=\"8\" width=\"17\" height=\"9\" rx=\"4.5\" /><path class=\"ziigi-stroke\" d=\"M8 10.8v3.4M6.3 12.5h3.4\" /><circle cx=\"15.2\" cy=\"11.5\" r=\"0.8\" fill=\"currentColor\" /><circle cx=\"17\" cy=\"13.5\" r=\"0.8\" fill=\"currentColor\" />" },
+    "act_bath": { label: "Bain", emoji: "🛁", bg: "<path class=\"ziigi-bg\" d=\"M4 12.5h16v2.5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-2.5z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M3.5 12.5h17M4.5 12.5v2.5a4 4 0 0 0 4 4h7a4 4 0 0 0 4-4v-2.5M6.5 12.5V7a2 2 0 0 1 3.5-1.3M7 19l-1 1.5M17 19l1 1.5\" /><circle class=\"ziigi-stroke\" cx=\"14.5\" cy=\"8.5\" r=\"1.2\" /><circle cx=\"17.2\" cy=\"6.8\" r=\"0.8\" fill=\"currentColor\" />" },
+    "act_cinema": { label: "Cinéma / Série", emoji: "🎬", bg: "<rect class=\"ziigi-bg\" x=\"3.5\" y=\"6\" width=\"17\" height=\"12\" rx=\"2.5\" />", stroke: "<rect class=\"ziigi-stroke\" x=\"3.5\" y=\"6\" width=\"17\" height=\"12\" rx=\"2.5\" /><path class=\"ziigi-stroke\" d=\"M10.2 9.5l4.8 2.5-4.8 2.5V9.5z\" />" },
+    "act_family": { label: "Famille", emoji: "👨‍👩‍👧", bg: "<path class=\"ziigi-bg\" d=\"M4.5 19a4 4 0 0 1 7.5-1.8A4 4 0 0 1 19.5 19H4.5z\" />", stroke: "<circle class=\"ziigi-stroke\" cx=\"8.5\" cy=\"9\" r=\"2.5\" /><circle class=\"ziigi-stroke\" cx=\"15.5\" cy=\"9\" r=\"2.5\" /><path class=\"ziigi-stroke\" d=\"M4.2 19a4.3 4.3 0 0 1 8.6 0M11.2 19a4.3 4.3 0 0 1 8.6 0M12 6.2s-1.4-.9-1.4-1.9a.8.8 0 0 1 1.4-.5.8.8 0 0 1 1.4.5c0 1-1.4 1.9-1.4 1.9z\" />" },
+    "act_yoga": { label: "Yoga", emoji: "🧘‍♀️", bg: "<circle class=\"ziigi-bg\" cx=\"12\" cy=\"5.5\" r=\"2\" /><path class=\"ziigi-bg\" d=\"M6.5 18.5c1.8-2.2 3.6-3 5.5-3s3.7.8 5.5 3H6.5z\" />", stroke: "<circle class=\"ziigi-stroke\" cx=\"12\" cy=\"5.5\" r=\"2\" /><path class=\"ziigi-stroke\" d=\"M12 8.5v5.5M6.5 12.5L12 10l5.5 2.5M6 18.5c2-1.8 4-2.5 6-2.5s4 .7 6 2.5H6z\" />" },
+    "act_meditation": { label: "Méditation", emoji: "🪷", bg: "<path class=\"ziigi-bg\" d=\"M12 6c2.5 2.5 3.5 5 3.5 7.5A3.5 3.5 0 0 1 12 17a3.5 3.5 0 0 1-3.5-3.5C8.5 11 9.5 8.5 12 6z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M12 6c2.5 2.5 3.5 5 3.5 7.5A3.5 3.5 0 0 1 12 17a3.5 3.5 0 0 1-3.5-3.5C8.5 11 9.5 8.5 12 6zM8.5 15.5c-2.5-.5-4.5-2-4.5-4.5 2.2 0 4 1 5 2.5M15.5 15.5c2.5-.5 4.5-2 4.5-4.5-2.2 0-4 1-5 2.5M6 19h12\" />" },
+    "act_cooking": { label: "Cuisine", emoji: "🍳", bg: "<path class=\"ziigi-bg\" d=\"M5.5 11h13v5.5a3 3 0 0 1-3 3h-7a3 3 0 0 1-3-3V11z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M4 11h16M5.5 11v5.5a3 3 0 0 0 3 3h7a3 3 0 0 0 3-3V11M9.5 11V9a2.5 2.5 0 0 1 5 0v2M9 6.5V5M12 6V4.5M15 6.5V5\" />" },
+    "act_lego": { label: "Lego", emoji: "🧱", bg: "<rect class=\"ziigi-bg\" x=\"4\" y=\"10\" width=\"16\" height=\"9\" rx=\"2\" />", stroke: "<rect class=\"ziigi-stroke\" x=\"4\" y=\"10\" width=\"16\" height=\"9\" rx=\"2\" /><path class=\"ziigi-stroke\" d=\"M7 10V7.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V10M13 10V7.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V10\" />" },
+    "act_hug": { label: "Câlin", emoji: "🤗", bg: "<path class=\"ziigi-bg\" d=\"M12 19.5s-6.5-4.2-6.5-9.2A4 4 0 0 1 12 7.5a4 4 0 0 1 6.5 2.8c0 5-6.5 9.2-6.5 9.2z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M12 19.5s-6.5-4.2-6.5-9.2A4 4 0 0 1 12 7.5a4 4 0 0 1 6.5 2.8c0 5-6.5 9.2-6.5 9.2zM6.5 13.5c2 .5 3.8-.5 4.8-1.8M17.5 13.5c-2 .5-3.8-.5-4.8-1.8\" />" },
+    "act_coloring": { label: "Coloriage", emoji: "🖍️", bg: "<path class=\"ziigi-bg\" d=\"M15.5 4.5l4 4L9.5 18.5l-5 1 1-5 10-10z\" />", stroke: "<path class=\"ziigi-stroke\" d=\"M15.5 4.5l4 4L9.5 18.5l-5 1 1-5 10-10zM13.5 6.5l4 4M7.5 12.5l4 4M4.5 19.5c2 0 3.5 1 5.5 1s3.5-1 5.5-1\" />" }
+  };
+
+  const ZIIGI_ICON_GROUPS = {
+    mood: ["mood_1", "mood_2", "mood_3", "mood_4", "mood_heart", "mood_sparkle", "mood_storm", "mood_flower", "mood_battery"],
+    sleep: ["sleep_1", "sleep_2", "sleep_3", "sleep_4", "sleep_bed", "sleep_stars"],
+    care: [
+      "care_1", "care_2", "care_3", "care_4", "care_5", "care_6",
+      "act_bath", "act_cinema", "act_family", "act_yoga", "act_meditation", "act_cooking", "act_lego", "act_hug", "act_coloring",
+      "act_book", "act_palette", "act_music", "act_plant", "act_meds", "act_clean", "act_chat", "act_journal", "act_game"
+    ]
+  };
+
+  function getZiigiIconSvg(key, tone, extraClass) {
+    const def = ZIIGI_ICONS[key];
+    if (!def) return "";
+    const cls = "ziigi-icon ziigi-tone-" + (tone || "accent") + (extraClass ? " " + extraClass : "");
+    return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" aria-hidden="true">${def.bg}${def.stroke}</svg>`;
+  }
+
+  function stripLeadingEmoji(str) {
+    return String(str || "").replace(/^(?:[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}][\uFE0E\uFE0F]?\u200D?)+\s*/u, "").trim();
+  }
+
+  function getPillIconHtml(pill, tone, extraClass) {
+    if (!pill) return "";
+    const iconKey = (pill.icon && ZIIGI_ICONS[pill.icon]) ? pill.icon : (ZIIGI_ICONS[pill.id] ? pill.id : "");
+    if (iconKey) return getZiigiIconSvg(iconKey, tone, extraClass);
+    return escapeHtml(pill.emoji || "•");
+  }
+
+  function getCareDisplayHtml(care, extraClass) {
+    if (!care) return "";
+    const iconKey = (care.icon && ZIIGI_ICONS[care.icon]) ? care.icon : (ZIIGI_ICONS[care.id] ? care.id : "");
+    if (iconKey) {
+      let cleanLbl = stripLeadingEmoji(care.label) || care.label;
+      if (care.id === "care_6" && cleanLbl === "Mouvement doux") cleanLbl = "Exercice léger";
+      return `${getZiigiIconSvg(iconKey, "care", extraClass)}<span>${escapeHtml(cleanLbl)}</span>`;
+    }
+    return `<span>${escapeHtml(care.label)}</span>`;
+  }
+
+  function renderIconPicker(containerId, hiddenInputId, emojiInputId, groupKey, tone) {
+    const box = document.getElementById(containerId);
+    const hiddenInput = document.getElementById(hiddenInputId);
+    if (!box || !hiddenInput) return;
+    const keys = ZIIGI_ICON_GROUPS[groupKey] || [];
+    const current = hiddenInput.value || keys[0] || "";
+    hiddenInput.value = current;
+    box.innerHTML = "";
+    keys.forEach(function (k) {
+      const def = ZIIGI_ICONS[k];
+      if (!def) return;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "icon-picker-btn" + (current === k ? " active" : "");
+      btn.title = def.label;
+      btn.setAttribute("aria-label", def.label);
+      btn.innerHTML = getZiigiIconSvg(k, tone);
+      btn.onclick = function () {
+        hiddenInput.value = k;
+        if (emojiInputId) {
+          const emoEl = document.getElementById(emojiInputId);
+          if (emoEl) emoEl.value = "";
+        }
+        box.querySelectorAll(".icon-picker-btn").forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+      };
+      box.appendChild(btn);
+    });
+  }
+
+
+  /* =========================================================
      2. DONNÉES PAR DÉFAUT, MIGRATION DOUCE & PERSISTANCE
      ========================================================= */
   const STORAGE_KEY = "ziigi_agenda_v19_data";
@@ -194,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
         { id: "care_3", label: "🧘 Étirements" },
         { id: "care_4", label: "☕ Boisson chaude" },
         { id: "care_5", label: "🌿 Pause calme" },
-        { id: "care_6", label: "🚶 Mouvement doux" }
+        { id: "care_6", label: "🏋️ Exercice léger" }
       ],
       moments: [],
       tasksByDate: {},
@@ -320,12 +454,12 @@ document.addEventListener("DOMContentLoaded", function () {
   function sanitizeLevelPills(arr, defaults) {
     if (!Array.isArray(arr)) return defaults;
     return arr.filter(function (x) { return isObj(x) && typeof x.id === "string" && x.id; }).map(function (x) {
-      return { id: safeStr(x.id, 80), emoji: safeStr(x.emoji, 16), label: safeStr(x.label, 80), level: clampLevel(x.level) };
+      return { id: safeStr(x.id, 80), emoji: safeStr(x.emoji, 16), icon: safeStr(x.icon, 40), label: safeStr(x.label, 80), level: clampLevel(x.level) };
     });
   }
   function sanitizeSnapshot(x) {
     if (!isObj(x)) return null;
-    return { id: safeStr(x.id, 80), emoji: safeStr(x.emoji, 16), label: safeStr(x.label, 80), level: clampLevel(x.level) };
+    return { id: safeStr(x.id, 80), emoji: safeStr(x.emoji, 16), icon: safeStr(x.icon, 40), label: safeStr(x.label, 80), level: clampLevel(x.level) };
   }
   function sanitizeCategories(arr, defaults) {
     if (!Array.isArray(arr)) return defaults;
@@ -339,6 +473,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return arr.filter(function (x) { return isObj(x) && typeof x.id === "string" && x.id; }).map(function (x) {
       const o = { id: safeStr(x.id, 80) };
       o[textKey] = safeStr(x[textKey], 1000);
+      if (typeof x.icon === "string" && x.icon) o.icon = safeStr(x.icon, 40);
       return o;
     });
   }
@@ -675,6 +810,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return {
         id: live.id,
         emoji: live.emoji || "•",
+        icon: live.icon || "",
         label: live.label || "Sans titre",
         level: clampLevel(live.level)
       };
@@ -683,6 +819,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return {
         id: snapshot.id || id,
         emoji: snapshot.emoji || "•",
+        icon: snapshot.icon || "",
         label: snapshot.label || "Pastille archivée",
         level: clampLevel(snapshot.level)
       };
@@ -833,7 +970,7 @@ document.addEventListener("DOMContentLoaded", function () {
           ${m.note ? `<div class="moment-note"></div>` : ""}
         </div>
         <div class="moment-actions">
-          <button type="button" class="icon-btn" data-edit="1" title="Modifier" aria-label="Modifier">✏️</button>
+          <button type="button" class="icon-btn" data-edit="1" title="Modifier" aria-label="Modifier">${getZiigiIconSvg("tool_pencil", "accent", "ziigi-icon-sm")}</button>
           <button type="button" class="icon-btn danger-icon" data-del="1" title="Supprimer" aria-label="Supprimer">✕</button>
         </div>
       `;
@@ -1016,7 +1153,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = `pill-btn mood-pill ${entry.moodId === p.id ? "selected" : ""}`;
-      btn.textContent = `${p.emoji} ${p.label}`;
+      btn.innerHTML = `${getPillIconHtml(p, "mood")}<span>${escapeHtml(p.label)}</span>`;
       btn.onclick = function () {
         const w = getOrCreateWellness(selectedDate);
         if (w.moodId === p.id) {
@@ -1024,7 +1161,7 @@ document.addEventListener("DOMContentLoaded", function () {
           w.moodSnapshot = null;
         } else {
           w.moodId = p.id;
-          w.moodSnapshot = { id: p.id, emoji: p.emoji, label: p.label, level: clampLevel(p.level) };
+          w.moodSnapshot = { id: p.id, emoji: p.emoji, icon: p.icon || "", label: p.label, level: clampLevel(p.level) };
         }
         saveState();
         renderWellnessAndNotes();
@@ -1039,7 +1176,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = `pill-btn sleep-pill ${entry.sleepId === p.id ? "selected" : ""}`;
-      btn.textContent = `${p.emoji} ${p.label}`;
+      btn.innerHTML = `${getPillIconHtml(p, "sleep")}<span>${escapeHtml(p.label)}</span>`;
       btn.onclick = function () {
         const w = getOrCreateWellness(selectedDate);
         if (w.sleepId === p.id) {
@@ -1047,7 +1184,7 @@ document.addEventListener("DOMContentLoaded", function () {
           w.sleepSnapshot = null;
         } else {
           w.sleepId = p.id;
-          w.sleepSnapshot = { id: p.id, emoji: p.emoji, label: p.label, level: clampLevel(p.level) };
+          w.sleepSnapshot = { id: p.id, emoji: p.emoji, icon: p.icon || "", label: p.label, level: clampLevel(p.level) };
         }
         saveState();
         renderWellnessAndNotes();
@@ -1064,7 +1201,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = `pill-btn meal-pill ${currentMeals === count ? "selected" : ""}`;
-      btn.textContent = `🍽️ ${count} repas`;
+      btn.innerHTML = `${getZiigiIconSvg("meal", "meal")}<span>${count} repas</span>`;
       btn.onclick = function () {
         const w = getOrCreateWellness(selectedDate);
         w.mealsCount = w.mealsCount === count ? 0 : count;
@@ -1077,7 +1214,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const snackBtn = document.createElement("button");
     snackBtn.type = "button";
     snackBtn.className = `pill-btn meal-pill ${entry.snack ? "selected" : ""}`;
-    snackBtn.textContent = "🍎 Collation";
+    snackBtn.innerHTML = `${getZiigiIconSvg("snack", "meal")}<span>Collation</span>`;
     snackBtn.onclick = function () {
       const w = getOrCreateWellness(selectedDate);
       w.snack = !w.snack;
@@ -1096,7 +1233,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = `pill-btn water-pill ${n <= waterCount ? "selected" : ""}`;
-      btn.textContent = `💧 ${n}`;
+      btn.innerHTML = `${getZiigiIconSvg("water", "water", "ziigi-icon-sm")}<span>${n}</span>`;
       btn.setAttribute("aria-label", `${n} verre${n > 1 ? "s" : ""} d'eau`);
       btn.onclick = function () {
         const w = getOrCreateWellness(selectedDate);
@@ -1116,7 +1253,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = `pill-btn care-pill ${activeCare.includes(c.id) ? "selected" : ""}`;
-      btn.textContent = c.label;
+      btn.innerHTML = getCareDisplayHtml(c);
       btn.onclick = function () {
         const w = getOrCreateWellness(selectedDate);
         if (!Array.isArray(w.careIds)) w.careIds = [];
@@ -1195,13 +1332,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (mood) {
           const mp = document.createElement("span");
           mp.className = "week-mini-pill mood";
-          mp.textContent = `${mood.emoji} ${mood.label}`;
+          mp.innerHTML = `${getPillIconHtml(mood, "mood", "ziigi-icon-sm")}<span>${escapeHtml(mood.label)}</span>`;
           pillsRow.appendChild(mp);
         }
         if (sleep) {
           const sp = document.createElement("span");
           sp.className = "week-mini-pill sleep";
-          sp.textContent = `${sleep.emoji} ${sleep.label}`;
+          sp.innerHTML = `${getPillIconHtml(sleep, "sleep", "ziigi-icon-sm")}<span>${escapeHtml(sleep.label)}</span>`;
           pillsRow.appendChild(sp);
         }
         if (hasNutrition) {
@@ -1354,8 +1491,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const wellPills = [];
-    if (mood) wellPills.push(`<span class="table-pill mood">${escapeHtml(mood.emoji)} ${escapeHtml(mood.label)}</span>`);
-    if (sleep) wellPills.push(`<span class="table-pill sleep">${escapeHtml(sleep.emoji)} ${escapeHtml(sleep.label)}</span>`);
+    if (mood) wellPills.push(`<span class="table-pill mood">${getPillIconHtml(mood, "mood", "ziigi-icon-sm")}<span>${escapeHtml(mood.label)}</span></span>`);
+    if (sleep) wellPills.push(`<span class="table-pill sleep">${getPillIconHtml(sleep, "sleep", "ziigi-icon-sm")}<span>${escapeHtml(sleep.label)}</span></span>`);
     if (meals > 0 || snack) {
       wellPills.push(`<span class="table-pill meal">${meals > 0 ? `🍽️ ${meals} repas` : ""}${snack ? (meals > 0 ? " + 🍎" : "🍎 Collation") : ""}</span>`);
     }
@@ -1759,7 +1896,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const emo = document.createElement("span");
       emo.className = "recap-month-emoji";
       emo.setAttribute("aria-hidden", "true");
-      emo.textContent = pill ? (pill.emoji || "•") : "·";
+      emo.innerHTML = pill ? getPillIconHtml(pill, recapMonthMode, "ziigi-icon-sm") : "·";
       cell.appendChild(num);
       cell.appendChild(emo);
 
@@ -2066,10 +2203,10 @@ document.addEventListener("DOMContentLoaded", function () {
     points.slice().reverse().forEach(function (pt) {
       const tr = document.createElement("tr");
       const moodCell = pt.mood
-        ? `<span class="table-pill mood">${escapeHtml(pt.mood.emoji)} ${pt.mood.level}/4</span>`
+        ? `<span class="table-pill mood">${getPillIconHtml(pt.mood, "mood", "ziigi-icon-sm")}<span>${pt.mood.level}/4</span></span>`
         : `<span class="muted">—</span>`;
       const sleepCell = pt.sleep
-        ? `<span class="table-pill sleep">${escapeHtml(pt.sleep.emoji)} ${pt.sleep.level}/4</span>`
+        ? `<span class="table-pill sleep">${getPillIconHtml(pt.sleep, "sleep", "ziigi-icon-sm")}<span>${pt.sleep.level}/4</span></span>`
         : `<span class="muted">—</span>`;
       const mealCell = (pt.mealsCount > 0 || pt.snack)
         ? `<span class="table-pill meal">${pt.mealsCount > 0 ? `🍽️ ${pt.mealsCount}` : ""}${pt.snack ? (pt.mealsCount > 0 ? " + 🍎" : "🍎") : ""}</span>`
@@ -2203,7 +2340,8 @@ document.addEventListener("DOMContentLoaded", function () {
       row.className = "pill-setting-row";
       row.innerHTML = `
         <div class="row">
-          <span>${escapeHtml(p.emoji)} ${escapeHtml(p.label)}</span>
+          ${getPillIconHtml(p, "mood")}
+          <span>${escapeHtml(p.label)}</span>
           <span class="level-badge">${clampLevel(p.level)}/4</span>
         </div>
         <button type="button" class="sm danger" aria-label="Supprimer">✕</button>
@@ -2225,7 +2363,8 @@ document.addEventListener("DOMContentLoaded", function () {
       row.className = "pill-setting-row";
       row.innerHTML = `
         <div class="row">
-          <span>${escapeHtml(p.emoji)} ${escapeHtml(p.label)}</span>
+          ${getPillIconHtml(p, "sleep")}
+          <span>${escapeHtml(p.label)}</span>
           <span class="level-badge">${clampLevel(p.level)}/4</span>
         </div>
         <button type="button" class="sm danger" aria-label="Supprimer">✕</button>
@@ -2273,7 +2412,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const row = document.createElement("div");
       row.className = "pill-setting-row";
       row.innerHTML = `
-        <span>${escapeHtml(c.label)}</span>
+        <div class="row">${getCareDisplayHtml(c)}</div>
         <button type="button" class="sm danger" aria-label="Supprimer">✕</button>
       `;
       row.querySelector(".danger").onclick = function () {
@@ -2285,6 +2424,10 @@ document.addEventListener("DOMContentLoaded", function () {
       };
       careList.appendChild(row);
     });
+
+    renderIconPicker("moodIconPicker", "newMoodIcon", "newMoodEmoji", "mood", "mood");
+    renderIconPicker("sleepIconPicker", "newSleepIcon", "newSleepEmoji", "sleep", "sleep");
+    renderIconPicker("careIconPicker", "newCareIcon", null, "care", "care");
 
     document.getElementById("quotesCountLabel").textContent = `${state.quotes.length} phrase(s)`;
     const quotesList = document.getElementById("settingsQuotesList");
@@ -2687,9 +2830,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // Paramètres : Pastilles, Catégories & Phrases
   document.getElementById("addMoodForm").onsubmit = function (e) {
     e.preventDefault();
+    const typedEmoji = document.getElementById("newMoodEmoji").value.trim();
+    const pickedIcon = document.getElementById("newMoodIcon") ? document.getElementById("newMoodIcon").value.trim() : "";
+    const iconKey = typedEmoji ? "" : (ZIIGI_ICONS[pickedIcon] ? pickedIcon : "mood_sparkle");
+    const fallbackEmoji = typedEmoji || (ZIIGI_ICONS[iconKey] ? ZIIGI_ICONS[iconKey].emoji : "✨");
     state.moodPills.push({
       id: uid("mood"),
-      emoji: document.getElementById("newMoodEmoji").value.trim() || "✨",
+      emoji: fallbackEmoji,
+      icon: iconKey,
       label: document.getElementById("newMoodLabel").value.trim(),
       level: clampLevel(document.getElementById("newMoodLevel").value)
     });
@@ -2701,9 +2849,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("addSleepForm").onsubmit = function (e) {
     e.preventDefault();
+    const typedEmoji = document.getElementById("newSleepEmoji").value.trim();
+    const pickedIcon = document.getElementById("newSleepIcon") ? document.getElementById("newSleepIcon").value.trim() : "";
+    const iconKey = typedEmoji ? "" : (ZIIGI_ICONS[pickedIcon] ? pickedIcon : "sleep_3");
+    const fallbackEmoji = typedEmoji || (ZIIGI_ICONS[iconKey] ? ZIIGI_ICONS[iconKey].emoji : "🌙");
     state.sleepPills.push({
       id: uid("sleep"),
-      emoji: document.getElementById("newSleepEmoji").value.trim() || "🌙",
+      emoji: fallbackEmoji,
+      icon: iconKey,
       label: document.getElementById("newSleepLabel").value.trim(),
       level: clampLevel(document.getElementById("newSleepLevel").value)
     });
@@ -2731,10 +2884,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const input = document.getElementById("newCareInput");
     const text = input.value.trim();
     if (!text) return;
-    state.careGestures.push({ id: uid("care"), label: text });
+    const pickedIcon = document.getElementById("newCareIcon") ? document.getElementById("newCareIcon").value.trim() : "";
+    const iconKey = ZIIGI_ICONS[pickedIcon] ? pickedIcon : "";
+    const item = { id: uid("care"), label: text };
+    if (iconKey) item.icon = iconKey;
+    state.careGestures.push(item);
     input.value = "";
     saveState();
     renderSettings();
+    showToast("Geste de soin ajouté.");
   };
 
   document.getElementById("addQuoteForm").onsubmit = function (e) {
@@ -3375,7 +3533,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const btn = document.getElementById("gentleModeToggleBtn");
     if (btn) {
       btn.classList.toggle("active", active);
-      btn.textContent = active ? "🌿 Jour difficile : Actif" : "🌿 Jour difficile";
+      btn.innerHTML = `${getZiigiIconSvg("nav_gentle", "care", "ziigi-icon-sm")}<span>${active ? "Jour difficile : Actif" : "Jour difficile"}</span>`;
     }
   }
 
@@ -3458,9 +3616,9 @@ document.addEventListener("DOMContentLoaded", function () {
   let drawEraser = false;
   let drawPalmReject = false;
   const drawPapers = [
-    { cls: "paper-lined", label: "📄 Ligné" },
-    { cls: "paper-dotted", label: "📄 Pointillé" },
-    { cls: "", label: "📄 Uni" }
+    { cls: "paper-lined", label: "Ligné" },
+    { cls: "paper-dotted", label: "Pointillé" },
+    { cls: "", label: "Uni" }
   ];
   let drawPaperIdx = 0;
   let isDrawing = false;
@@ -3586,7 +3744,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (drawPapers[drawPaperIdx].cls) {
       drawWrap.classList.add(drawPapers[drawPaperIdx].cls);
     }
-    this.textContent = drawPapers[drawPaperIdx].label;
+    this.innerHTML = `${getZiigiIconSvg("tool_paper", "accent", "ziigi-icon-sm")}<span>${drawPapers[drawPaperIdx].label}</span>`;
   };
 
   document.getElementById("drawUndoBtn").onclick = function () {
@@ -3704,7 +3862,7 @@ document.addEventListener("DOMContentLoaded", function () {
       pill.classList.toggle("is-connected", Boolean(isConnected));
     }
     if (navBtn) {
-      navBtn.textContent = isConnected ? "🟢" : "☁️";
+      navBtn.innerHTML = getZiigiIconSvg(isConnected ? "nav_cloud_on" : "nav_cloud", "accent", "ziigi-icon-nav");
     }
     if (currentUser) {
       loggedOutView.classList.add("hidden");
